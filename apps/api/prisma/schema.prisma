@@ -25,11 +25,20 @@ model Event{
   name  String
   date  DateTime
   location  String
+  description String
+  tickets Ticket[]
   limit Int
   attendees Attendee[]
   organizerId Int
   Organizer User @relation(fields: [organizerId], references: [id])
   createAt  DateTime
+}
+model Ticket {
+  id Int @id @default(autoincrement())
+  eventId Int
+  type String
+  price Float
+  event Event @relation(fields: [eventId], references: [id])
 }
 
 model Attendee {
