@@ -5,7 +5,7 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "test": "turbo run test",
-    "serve": "turbo run serve",
+    "serve": "next start -p $PORT",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "prepare": "husky install",
     "postprepare": "bash -c 'chmod ug+x .husky/*'"
@@ -21,7 +21,7 @@
     "tsconfig": "*",
     "turbo": "latest"
   },
-  "name": "finpro-nextjs-express-prisma",
+  "name": "minpro-nextjs-express-prisma",
   "packageManager": "npm@8.15.0",
   "workspaces": [
     "apps/*",
@@ -31,5 +31,13 @@
     "hooks": {
       "pre-commit": "npx lint-staged"
     }
+  },
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "dotenv": "^16.4.5",
+    "prisma": "^5.22.0"
+  },
+  "prisma": {
+    "schema": "apps/api/prisma/schema.prisma"
   }
 }

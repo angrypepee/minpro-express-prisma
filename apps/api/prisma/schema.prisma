@@ -10,12 +10,37 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Sample {
-  id        Int      @id @default(autoincrement())
-  name      String
-  code      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model User{
+  id Int @id @default(autoincrement())
+  email String @unique
+  name String
+  role  Role
+  events Event[]
+  attendees Attendee[]
+  createAt DateTime @default(now())
+}
 
-  @@map("samples") // if you want to use snake_case format
+model Event{
+  id  Int @id @default(autoincrement())
+  name  String
+  date  DateTime
+  location  String
+  limit Int
+  attendees Attendee[]
+  organizerId Int
+  Organizer User @relation(fields: [organizerId], references: [id])
+  createAt  DateTime
+}
+
+model Attendee {
+  id Int @id @default(autoincrement())
+  userId  Int
+  eventId Int
+  user User @relation(fields: [userId], references: [id])
+  event Event @relation(fields: [eventId], references: [id])
+}
+
+enum Role {
+  ORGANIZER
+  ATTENDEE
 }
