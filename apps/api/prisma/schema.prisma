@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,43 +7,58 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User{
-  id Int @id @default(autoincrement())
-  email String @unique
-  name String
-  role  Role
-  events Event[]
-  attendees Attendee[]
-  createAt DateTime @default(now())
+model User {
+  id           Int        @id @default(autoincrement())
+  email        String     @unique
+  name         String
+  role         Role
+  createAt     DateTime   @default(now())
+  balance      Float      @default(0)
+  referralCode String?    @unique
+  referredBy   Int?
+  attendees    Attendee[]
+  events       Event[]
+  referrer     User?      @relation("Referrals", fields: [referredBy], references: [id])
+  referrals    User[]     @relation("Referrals")
+
+  @@index([referredBy], map: "User_referredBy_fkey")
 }
 
-model Event{
-  id  Int @id @default(autoincrement())
-  name  String
-  date  DateTime
-  location  String
+model Event {
+  id          Int        @id @default(autoincrement())
+  name        String
+  date        DateTime
+  location    String
   description String
-  tickets Ticket[]
-  limit Int
-  attendees Attendee[]
+  limit       Int
   organizerId Int
-  Organizer User @relation(fields: [organizerId], references: [id])
-  createAt  DateTime
+  createAt    DateTime
+  attendees   Attendee[]
+  Organizer   User       @relation(fields: [organizerId], references: [id])
+  tickets     Ticket[]
+
+  @@index([organizerId], map: "Event_organizerId_fkey")
 }
+
 model Ticket {
-  id Int @id @default(autoincrement())
+  id      Int    @id @default(autoincrement())
   eventId Int
-  type String
-  price Float
-  event Event @relation(fields: [eventId], references: [id])
+  type    String
+  price   Float
+  event   Event  @relation(fields: [eventId], references: [id])
+
+  @@index([eventId], map: "Ticket_eventId_fkey")
 }
 
 model Attendee {
-  id Int @id @default(autoincrement())
+  id      Int   @id @default(autoincrement())
   userId  Int
   eventId Int
-  user User @relation(fields: [userId], references: [id])
-  event Event @relation(fields: [eventId], references: [id])
+  event   Event @relation(fields: [eventId], references: [id])
+  user    User  @relation(fields: [userId], references: [id])
+
+  @@index([eventId], map: "Attendee_eventId_fkey")
+  @@index([userId], map: "Attendee_userId_fkey")
 }
 
 enum Role {
