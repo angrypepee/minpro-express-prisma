@@ -12,14 +12,16 @@ model User {
   email        String     @unique
   name         String
   role         Role
+  password     String
   createAt     DateTime   @default(now())
   balance      Float      @default(0)
   referralCode String?    @unique
   referredBy   Int?
   attendees    Attendee[]
-  events       Event[]
+  events       Event[] @relation("OrganizedEvents")
   referrer     User?      @relation("Referrals", fields: [referredBy], references: [id])
   referrals    User[]     @relation("Referrals")
+  reviews      Review[]
 
   @@index([referredBy], map: "User_referredBy_fkey")
 }
@@ -34,8 +36,9 @@ model Event {
   organizerId Int
   createAt    DateTime
   attendees   Attendee[]
-  Organizer   User       @relation(fields: [organizerId], references: [id])
+  organizer   User       @relation("OrganizedEvents", fields: [organizerId], references: [id])
   tickets     Ticket[]
+  reviews     Review[]
 
   @@index([organizerId], map: "Event_organizerId_fkey")
 }
@@ -44,7 +47,7 @@ model Ticket {
   id      Int    @id @default(autoincrement())
   eventId Int
   type    String
-  price   Float
+  price   Float? @default(0)
   event   Event  @relation(fields: [eventId], references: [id])
 
   @@index([eventId], map: "Ticket_eventId_fkey")
@@ -59,6 +62,20 @@ model Attendee {
 
   @@index([eventId], map: "Attendee_eventId_fkey")
   @@index([userId], map: "Attendee_userId_fkey")
+}
+
+model Review {
+  id Int @id @default(autoincrement())
+  userId Int
+  eventId Int
+  rating Int
+  review String?
+  createdAt DateTime @default(now())
+  user User @relation(fields: [userId], references: [id])
+  event Event @relation(fields: [eventId], references: [id])
+
+  @@index([eventId], map: "Review_eventID_fkey")
+  @@index([userId], map: "Review_userId_fkey")
 }
 
 enum Role {

@@ -14,6 +14,7 @@
     "@commitlint/cli": "^18.4.2",
     "@commitlint/config-conventional": "^18.4.2",
     "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.7",
     "eslint": "^8.48.0",
     "husky": "^8.0.0",
     "lint-staged": "^15.1.0",
@@ -40,7 +41,8 @@
     "express": "^4.21.1",
     "express-validator": "^7.2.0",
     "jsonwebtoken": "^9.0.2",
-    "prisma": "^5.22.0"
+    "prisma": "^5.22.0",
+    "react-router-dom": "^7.0.1"
   },
   "prisma": {
     "schema": "apps/api/prisma/schema.prisma"
