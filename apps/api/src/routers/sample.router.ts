@@ -1,20 +1,19 @@
-import { SampleController } from '@/controllers/sample.controller';
+import SampleController from '@/controllers/sample.controller'; // Changed to default import
 import { Router } from 'express';
 
 export class SampleRouter {
   private router: Router;
-  private sampleController: SampleController;
+  private sampleController: typeof SampleController;
 
   constructor() {
-    this.sampleController = new SampleController();
+    this.sampleController = SampleController; 
     this.router = Router();
     this.initializeRoutes();
   }
 
   private initializeRoutes(): void {
-    this.router.get('/', this.sampleController.getSampleData);
-    this.router.get('/:id', this.sampleController.getSampleDataById);
-    this.router.post('/', this.sampleController.createSampleData);
+    this.router.get('/', this.sampleController.registerUser);
+    this.router.get('/:id', this.sampleController.loginUser);
   }
 
   getRouter(): Router {
