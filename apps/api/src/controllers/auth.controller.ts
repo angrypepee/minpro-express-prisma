@@ -19,7 +19,7 @@ export class AuthController {
 
       res.status(201).send({ message: 'User registered successfully', user: newUser });
     } catch (error) {
-      if (error.code === 'P2002') {
+      if ((error as { code: string }).code === 'P2002') {
         return res.status(400).send({ error: 'Email already exists' });
       }
       res.status(500).send({ error: 'Error registering user' });

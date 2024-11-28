@@ -1,6 +1,14 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
+declare global {
+  namespace Express {
+    interface Request {
+      user?: { id: string }; // Or your user object type
+    }
+  }
+}
+
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
 
 interface AuthenticatedRequest extends Request {
@@ -15,10 +23,13 @@ export const authMiddleware = (req: AuthenticatedRequest, res: Response, next: N
   }
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as { id: number; role: string };
-    req.user = decoded;
-    next();
   } catch (error) {
-    res.status(401).send({ error: 'Invalid token' });
+    if (error instanceof jwt.TokenExpiredError) {
+      return res.status(401).send({ error: 'Token expired' });
+    } else if (error instanceof jwt.JsonWebTokenError) {
+      return res.status(401).send({ error: 'Invalid token' }); 
+    } else {
+      return res.status(401).send({ error: 'Authentication failed' });
+    }
   }
 };

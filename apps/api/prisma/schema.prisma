@@ -12,16 +12,16 @@ model User {
   email        String     @unique
   name         String
   role         Role
-  password     String
   createAt     DateTime   @default(now())
   balance      Float      @default(0)
   referralCode String?    @unique
   referredBy   Int?
+  password     String
   attendees    Attendee[]
-  events       Event[] @relation("OrganizedEvents")
+  events       Event[]    @relation("OrganizedEvents")
+  reviews      Review[]
   referrer     User?      @relation("Referrals", fields: [referredBy], references: [id])
   referrals    User[]     @relation("Referrals")
-  reviews      Review[]
 
   @@index([referredBy], map: "User_referredBy_fkey")
 }
@@ -35,10 +35,11 @@ model Event {
   limit       Int
   organizerId Int
   createAt    DateTime
+  image   String
   attendees   Attendee[]
   organizer   User       @relation("OrganizedEvents", fields: [organizerId], references: [id])
-  tickets     Ticket[]
   reviews     Review[]
+  tickets     Ticket[]
 
   @@index([organizerId], map: "Event_organizerId_fkey")
 }
@@ -46,7 +47,7 @@ model Event {
 model Ticket {
   id      Int    @id @default(autoincrement())
   eventId Int
-  type    String
+  type    TicketType
   price   Float? @default(0)
   event   Event  @relation(fields: [eventId], references: [id])
 
@@ -65,14 +66,14 @@ model Attendee {
 }
 
 model Review {
-  id Int @id @default(autoincrement())
-  userId Int
-  eventId Int
-  rating Int
-  review String?
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  eventId   Int
+  rating    Int
+  review    String?
   createdAt DateTime @default(now())
-  user User @relation(fields: [userId], references: [id])
-  event Event @relation(fields: [eventId], references: [id])
+  event     Event    @relation(fields: [eventId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 
   @@index([eventId], map: "Review_eventID_fkey")
   @@index([userId], map: "Review_userId_fkey")
@@ -81,4 +82,10 @@ model Review {
 enum Role {
   ORGANIZER
   ATTENDEE
+}
+
+enum TicketType {
+  VIP
+  GENERAL
+  EARLY_BIRD
 }
