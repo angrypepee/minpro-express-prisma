@@ -1,4 +1,4 @@
-import Home from '../pages/Page';
+import Home from './page';
 
 describe('<Home />', () => {
   it('mounts', () => {
