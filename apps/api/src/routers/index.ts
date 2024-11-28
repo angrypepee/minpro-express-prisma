@@ -1,15 +1,33 @@
-import { Router } from 'express';
-import { AuthController } from '@/controllers/auth.controller';
-import { authMiddleware } from '@/middleware/authmiddleware';
+import { Request, Response } from 'express';
+import { PrismaClient } from '@prisma/client';
 
-const router = Router();
-const authController = new AuthController();
+const prisma = new PrismaClient();
 
-// Authentication routes
-router.post('/auth/register', (req, res) => authController.register(req, res)); 
-router.post('/auth/login', (req, res) => authController.login(req, res));
-router.get('/auth/me', authMiddleware, (req, res) => 
-authController.getAuthenticatedUser(req, res)
-);
+class AuthController {
+  // ... other controller methods (login, getAuthenticatedUser)
 
-export default router;
+  public async register(req: Request, res: Response): Promise<void> {
+    try {
+      const { email, name, password, role } = req.body;
+
+      // Important: Hash the password here before storing it!
+      const hashedPassword = await bcrypt.hash(password, 10); // Use bcrypt or a similar library
+
+      const newUser = await prisma.user.create({
+        data: {
+          email,
+          name,
+          password: hashedPassword, 
+          role: role || 'ATTENDEE', // Set default role if not provided
+        },
+      });
+
+      res.status(201).json(newUser);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Failed to create user' });
+    }
+  }
+}
+
+export { AuthController };

@@ -25,7 +25,7 @@ export default async function handler(req, res) {
       }
 
       // 3. Extract data from the parsed body
-      const { name, email, password } = parsedBody;
+      const { name, email, password, role } = parsedBody;
 
       // 4. Check if the email is already registered
       const existingUser = await prisma.user.findUnique({ where: { email } });
@@ -43,7 +43,7 @@ export default async function handler(req, res) {
           name,
           email,
           password: hashedPassword,
-          role: 'ATTENDEE',
+          role: role, // Use the extracted role directly (no quotes around 'role')
         },
       });
 
@@ -58,3 +58,5 @@ export default async function handler(req, res) {
     res.status(405).end(); // Method Not Allowed for other methods
   }
 }
+
+console.log("Request Body:", req.body);
