@@ -63,8 +63,7 @@ export class AuthController {
         return;
       }
 
-      // Generate JWT token (replace 'your-secret-key' with your actual secret)
-      const token = jwt.sign({ userId: user.id }, 'your-secret-key'); 
+      const token = jwt.sign({ userId: user.id }, 'j1J1VEgOQjl1NtmZftCA8YOxQOHjKRXM6MoNPvPb29s='); 
 
       res.status(200).json({ message: 'Login successful', token }); 
     } catch (error) {
@@ -75,7 +74,6 @@ export class AuthController {
 
   public async getAuthenticatedUser(req: any, res: Response): Promise<void> { 
     try {
-      // Assuming authMiddleware adds user object to req
       const user = req.user; 
 
       if (!user) {

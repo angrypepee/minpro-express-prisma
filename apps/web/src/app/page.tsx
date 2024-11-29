@@ -1,95 +1,76 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+// app/page.tsx
+'use client';
+
+import Image from 'next/image';
+import Link from 'next/link';
 
 export default function Home() {
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <main className="bg-gradient-to-r from-blue-500 to-purple-500 min-h-screen">
+      <div className="container mx-auto p-8 text-white">
+        <div className="text-center">
+          <h1 className="text-5xl font-bold mb-4">Meriah Event</h1>
+          <p className="text-lg mb-8">
+            Create unforgettable events with our easy-to-use platform.
+          </p>
+          <Link
+            href="/register"
+            className="bg-white hover:bg-gray-100 text-blue-500 font-bold py-2 px-4 rounded"
           >
-            By{' '}
+            Get Started
+          </Link>
+        </div>
+
+        <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="bg-white bg-opacity-20 rounded-lg shadow-md p-6 text-center">
+            <h2 className="text-xl font-bold mb-4">Create Events</h2>
+            <p className="text-gray-200">
+              Easily set up and manage events of any size.
+            </p>
+          </div>
+          <div className="bg-white bg-opacity-20 rounded-lg shadow-md p-6 text-center">
+            <h2 className="text-xl font-bold mb-4">Sell Tickets</h2>
+            <p className="text-gray-200">
+              Sell tickets online and track sales effortlessly.
+            </p>
+          </div>
+          <div className="bg-white bg-opacity-20 rounded-lg shadow-md p-6 text-center">
+            <h2 className="text-xl font-bold mb-4">
+              Manage Attendees
+            </h2>
+            <p className="text-gray-200">
+              Keep track of attendees and manage registrations seamlessly.
+            </p>
+          </div>
+          <div className="bg-white bg-opacity-20 rounded-lg shadow-md p-6 text-center">
+            <h2 className="text-xl font-bold mb-4">Gain Insights</h2>
+            <p className="text-gray-200">
+              Analyze event performance and make data-driven decisions.
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-24 flex flex-col md:flex-row items-center">
+          <div className="md:w-1/2">
             <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
+              src="/event-image.jpg" // Replace with your image
+              alt="Event Image"
+              width={500}
+              height={300}
+              className="rounded-lg shadow-md"
             />
-          </a>
+          </div>
+          <div className="md:w-1/2 mt-8 md:mt-0 md:ml-8 text-center md:text-left">
+            <h2 className="text-3xl font-bold mb-4">
+              Bring Your Events to Life
+            </h2>
+            <p className="text-gray-200">
+              Our platform provides all the tools you need to plan, promote,
+              and execute successful events.
+            </p>
+          </div>
         </div>
       </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
     </main>
-  )
+  );
 }

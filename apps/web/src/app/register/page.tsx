@@ -5,14 +5,14 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import Link from 'next/link'; // Import the Link component
+import Link from 'next/link';
 
 // Define form data
 interface FormData {
   name: string;
   email: string;
   password: string;
-  role: 'ATTENDEE' | 'ORGANIZER'; // Use a string literal type for the role
+  role: 'ATTENDEE' | 'ORGANIZER';
 }
 
 const schema = yup.object({
@@ -34,7 +34,7 @@ export default function RegisterForm() {
     setSubmitting(true);
     setApiError(null);
     try {
-      const response = await fetch('/api/register', {
+      const response = await fetch('http://localhost:3001/api/register', { // Correct API endpoint URL
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)

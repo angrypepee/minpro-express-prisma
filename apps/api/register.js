@@ -9,6 +9,7 @@ const schema = yup.object({
   name: yup.string().required('Name is required'),
   email: yup.string().email('Invalid email format').required('Email is required'),
   password: yup.string().min(8, 'Password must be at least 8 characters').required('Password is required'),
+  role: yup.string().oneOf(['ATTENDEE', 'ORGANIZER']).required('Role is required'), // Add role validation
 }).required();
 
 export default async function handler(req, res) {
@@ -43,7 +44,7 @@ export default async function handler(req, res) {
           name,
           email,
           password: hashedPassword,
-          role: role, // Use the extracted role directly (no quotes around 'role')
+          role: role, // Use the extracted role directly
         },
       });
 

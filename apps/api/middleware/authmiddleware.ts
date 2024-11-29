@@ -6,7 +6,7 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient(); 
 
 interface AuthenticatedRequest extends Request {
-  user?: { id: string; role: string };
+  user?: { id: number; role: string }; // Changed id to number
 }
 
 export const authMiddleware = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
@@ -17,10 +17,10 @@ export const authMiddleware = async (req: AuthenticatedRequest, res: Response, n
       return res.status(401).json({ message: 'Authorization header missing' });
     }
 
-    const decodedToken = jwt.verify(token, 'your-secret-key') as { userId: string }; 
+    const decodedToken = jwt.verify(token, 'i88HfEIrhmQxcKKToLlIGfxBg8KKA7YlRZxvxr433js= ') as { userId: number }; // Changed userId to number
 
     const user = await prisma.user.findUnique({  
-      where: { id: parseInt(decodedToken.userId) },
+      where: { id: decodedToken.userId }, 
       select: { id: true, role: true } 
     });
 
@@ -28,7 +28,7 @@ export const authMiddleware = async (req: AuthenticatedRequest, res: Response, n
       return res.status(401).json({ message: 'Invalid token' });
     }
 
-    req.user = { id: user.id.toString(), role: user.role }; 
+    req.user = user; // No need to convert id to string
     next();
   } catch (error) {
     console.error(error);
