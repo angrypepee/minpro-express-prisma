@@ -5,5 +5,5 @@
 
 */
 -- AlterTable
-ALTER TABLE `Event` DROP COLUMN `createAt`,
+ALTER TABLE "Event" DROP COLUMN "createAt",
     ADD COLUMN `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3);

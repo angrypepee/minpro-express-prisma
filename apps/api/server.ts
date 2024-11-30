@@ -1,31 +1,28 @@
-const express = require('express');
-const { PrismaClient } = require('@prisma/client');
-const cors = require('cors');
-const bcrypt = require('bcrypt');
-const yup = require('yup');
-const jwt = require('jsonwebtoken');
-
+import express from 'express';
+import { PrismaClient } from '@prisma/client';
+import cors from 'cors';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import * as yup from 'yup';
 import { authMiddleware } from './middleware/authmiddleware';
+import { Request } from 'express';
 
 const app = express();
 const prisma = new PrismaClient();
 const port = 3001;
 
-app.get('/', (req, res) => {
-  res.send('Hello from the API!'); // Or redirect to another page
-});
-
 app.use(cors());
 app.use(express.json());
 
+app.get('/', (req, res) => {
+  res.send('Hello from the API!');
+});
 
 // Yup schema for validation
 const schema = yup.object({
   name: yup.string().required('Name is required'),
   email: yup.string().email('Invalid email format').required('Email is required'),
-  password: yup.string().min(8,   
- 'Password must be at least 8 characters').required('Password is required'),   
-
+  password: yup.string().min(8, 'Password must be at least 8 characters').required('Password is required'),
 }).required();
 
 // GET /api/test-db
@@ -44,6 +41,7 @@ app.post('/api/register', async (req, res) => {
   try {
     const parsedBody = req.body;
 
+    // Validate the request body using Yup
     try {
       await schema.validate(parsedBody);
     } catch (validationError) {
@@ -54,8 +52,7 @@ app.post('/api/register', async (req, res) => {
 
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
-      return res.status(409).json({ error: 'Email already exists'   
- });
+      return res.status(409).json({ error: 'Email already exists' });
     }
 
     const saltRounds = 10;
@@ -65,9 +62,8 @@ app.post('/api/register', async (req, res) => {
       data: {
         name,
         email,
-        password: hashedPassword,   
-
-        role: role,
+        password: hashedPassword,
+        role,
       },
     });
 
@@ -75,13 +71,12 @@ app.post('/api/register', async (req, res) => {
 
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Failed to create user'   
- });
+    res.status(500).json({ error: 'Failed to create user' });
   }
 });
 
 // Secret key for JWT (get it from the environment variable)
-const jwtSecretKey = process.env.JWT_SECRET_KEY || 'j1J1VEgOQjl1NtmZftCA8YOxQOHjKRXM6MoNPvPb29s='; 
+const jwtSecretKey = process.env.JWT_SECRET_KEY || 'your-default-secret';
 
 // POST /api/login
 app.post('/api/login', async (req, res) => {
@@ -90,22 +85,19 @@ app.post('/api/login', async (req, res) => {
 
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
-      return res.status(401).json({   
- error: 'Invalid email or password' });
+      return res.status(401).json({ error: 'Invalid email or password' });
     }
 
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
-      return res.status(401).json({   
- error: 'Invalid email or password' });
+      return res.status(401).json({ error: 'Invalid email or password' });
     }
 
-    const token = jwt.sign({ userId: user.id   
- }, jwtSecretKey);
+    const token = jwt.sign({ userId: user.id }, jwtSecretKey);
 
     res.setHeader('Set-Cookie', `token=${token}; HttpOnly; Secure; Path=/;`);
 
-    res.status(200).json({ message: 'Login successful' }); 
+    res.status(200).json({ message: 'Login successful' });
 
   } catch (error) {
     console.error(error);
@@ -116,7 +108,7 @@ app.post('/api/login', async (req, res) => {
 // GET /api/user (protected route)
 app.get('/api/user', authMiddleware, async (req, res) => {
   try {
-    const user = req.user;
+    const user = (req as Request & { user: any }).user;
     const { password, ...userData } = user; // Exclude the password from the response
     res.status(200).json(userData);
   } catch (error) {
@@ -129,7 +121,7 @@ app.get('/api/user', authMiddleware, async (req, res) => {
 app.post('/api/events', authMiddleware, async (req, res) => {
   try {
     // 1. Get the authenticated user's ID
-    const organizerId = req.user.id;
+    const organizerId = (req as Request & { user: any }).user.id;
 
     // 2. Extract event data from the request body
     const { name, date, location, description, limit, image } = req.body;
@@ -154,7 +146,6 @@ app.post('/api/events', authMiddleware, async (req, res) => {
   }
 });
 
-
 // GET /api/events (protected route)
 app.get('/api/events', authMiddleware, async (req, res) => { 
   try {
@@ -171,7 +162,7 @@ app.get('/api/events', authMiddleware, async (req, res) => {
   }
 });
 
-
+// Start server
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
 });

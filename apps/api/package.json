@@ -1,19 +1,19 @@
 {
   "name": "api",
   "version": "1.0.0",
-  "description": "",
   "main": "src/index.ts",
   "scripts": {
     "dev": "cross-env NODE_ENV=development ts-node-dev -r tsconfig-paths/register src/index.ts",
     "build": "tsc && tsc-alias",
     "serve": "cross-env NODE_ENV=production node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prisma": "npx prisma"
+    "prisma": "npx prisma",
+    "start": "node apps/api/server.js" 
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^5.7.1",
+    "@prisma/client": "^6.0.0",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
     "dotenv": "^16.3.1",
@@ -24,11 +24,13 @@
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
-    "prisma": "^5.7.1",
+    "prisma": "^6.0.0",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.7.2"
-  }, 
-  "prisma": { 
+  },
+  "prisma": {
     "seed": "ts-node apps/api/prisma/seed.ts"
-  }
+  },
+  "keywords": [],
+  "description": ""
 }
