@@ -8,29 +8,22 @@ import * as jwt from 'jsonwebtoken';
 const prisma = new PrismaClient();
 const router = Router();
 
-// Get the JWT secret key from environment variables
 const jwtSecretKey = process.env.JWT_SECRET_KEY || 'j1J1VEgOQjl1NtmZftCA8YOxQOHjKRXM6MoNPvPb29s=';
 
 interface AuthenticatedRequest extends Request {
-  user?: { id: number; role: string; password?: string };
+  user: { id: number; role: string; password?: string };
 }
 
 // --- User Authentication Routes ---
 
 class AuthController {
-  public async register(req: Request, res: Response): Promise<Response> {
+  async register(req: Request, res: Response): Promise<Response> {
     try {
       const { email, name, password, role } = req.body;
-
       const hashedPassword = await bcrypt.hash(password, 10);
 
       const newUser = await prisma.user.create({
-        data: {
-          email,
-          name,
-          password: hashedPassword,
-          role: role || 'ATTENDEE',
-        },
+        data: { email, name, password: hashedPassword, role: role || 'ATTENDEE' },
       });
 
       return res.status(201).json(newUser);
@@ -40,37 +33,28 @@ class AuthController {
     }
   }
 
-  public async login(req: Request, res: Response): Promise<Response> {
+  async login(req: Request, res: Response): Promise<Response> {
     try {
       const { email, password } = req.body;
 
       const user = await prisma.user.findUnique({ where: { email } });
-      if (!user) {
+      if (!user || !(await bcrypt.compare(password, user.password))) {
         return res.status(401).json({ error: 'Invalid email or password' });
       }
 
-      const passwordMatch = await bcrypt.compare(password, user.password);
-      if (!passwordMatch) {
-        return res.status(401).json({ error: 'Invalid email or password' });
-      }
-
-      const token = jwt.sign({ userId: user.id }, jwtSecretKey);
-
+      const token = jwt.sign({ userId: user.id, role: user.role }, jwtSecretKey);
       res.setHeader('Set-Cookie', `token=${token}; HttpOnly; Secure; Path=/;`);
-      return res.status(200).json({ message: 'Login successful' });
+      return res.status(200).json({ message: 'Login successful', token });
     } catch (error) {
       console.error(error);
       return res.status(500).json({ error: 'Failed to log in' });
     }
   }
 
-  public async getAuthenticatedUser(req: AuthenticatedRequest, res: Response): Promise<Response> {
+  async getAuthenticatedUser(req: AuthenticatedRequest, res: Response): Promise<Response> {
     try {
       const user = req.user;
-
-      if (!user) {
-        return res.status(401).json({ error: 'Unauthorized' });
-      }
+      if (!user) return res.status(401).json({ error: 'Unauthorized' });
 
       const { password, ...userData } = user;
       return res.status(200).json(userData);
@@ -91,110 +75,46 @@ router.get('/user', authMiddleware, authController.getAuthenticatedUser);
 
 router.post('/events', authMiddleware, async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const organizerId = req.user.id;
+    const { id: organizerId } = req.user;
     const { name, date, location, description, limit, image } = req.body;
 
     const event = await prisma.event.create({
-      data: {
-        name,
-        date: new Date(date),
-        location,
-        description,
-        limit,
-        image,
-        organizerId,
-        createAt: new Date(),
-      },
+      data: { name, date: new Date(date), location, description, limit, image, organizerId, createdAt: new Date() },
     });
 
-    res.status(201).json({ message: 'Event created successfully', event });
+    return res.status(201).json({ message: 'Event created successfully', event });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Failed to create event' });
+    return res.status(500).json({ error: 'Failed to create event' });
   }
 });
 
-// GET /api/user (protected route)
-router.get('/user', authMiddleware, async (req: AuthenticatedRequest, res: Response) => { // Use AuthenticatedRequest type
+router.get('/events', async (_req, res) => {
   try {
-    const user = req.user;
-
-    if (!user) {
-      return res.status(401).json({ error: 'Unauthorized' });
-    }
-
-    const { password, ...userData } = user;
-    return res.status(200).json(userData);
+    const events = await prisma.event.findMany({ include: { organizer: true } });
+    return res.json(events);
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ error: 'Failed to get user' });
+    return res.status(500).json({ error: 'Failed to fetch events' });
   }
 });
 
-// POST /api/events (protected route)
-router.post('/events', authMiddleware, async (req: AuthenticatedRequest, res: Response) => {
-  try {
-    const organizerId = req.user.id; 
-    const { name, date, location, description, limit, image } = req.body;
-
-    const event = await prisma.event.create({
-      data: {
-        name,
-        date: new Date(date),
-        location,
-        description,
-        limit,
-        image,
-        organizerId,
-        createAt: new Date(),
-      },
-    });
-
-    res.status(201).json({ message: 'Event created successfully', event });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Failed to create event' });
-  }
-});
-
-// GET /api/events
-router.get('/events', authMiddleware, async (req: AuthenticatedRequest, res: Response) => {
-  try {
-    const events = await prisma.event.findMany({
-      include: {
-        organizer: true,
-      },
-    });
-    res.json(events);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Failed to fetch events' });
-  }
-});
-
-// GET /api/events/:id
-router.get('/events/:id', authMiddleware, async (req: AuthenticatedRequest, res: Response) => {
+router.get('/events/:id', async (req, res) => {
   try {
     const eventId = parseInt(req.params.id, 10);
     const event = await prisma.event.findUnique({
       where: { id: eventId },
-      include: {
-        organizer: true,
-      },
+      include: { organizer: true },
     });
 
-    if (!event) {
-      return res.status(404).json({ error: 'Event not found' });
-    }
-
-    res.json(event);
+    if (!event) return res.status(404).json({ error: 'Event not found' });
+    return res.json(event);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Failed to fetch event' });
+    return res.status(500).json({ error: 'Failed to fetch event' });
   }
 });
 
-// PUT /api/events/:id
 router.put('/events/:id', authMiddleware, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const eventId = parseInt(req.params.id, 10);
@@ -202,36 +122,25 @@ router.put('/events/:id', authMiddleware, async (req: AuthenticatedRequest, res:
 
     const updatedEvent = await prisma.event.update({
       where: { id: eventId },
-      data: {
-        name,
-        date: new Date(date),
-        location,
-        description,
-        limit,
-        image,
-      },
+      data: { name, date: new Date(date), location, description, limit, image },
     });
 
-    res.json(updatedEvent);
+    return res.json(updatedEvent);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Failed to update event' });
+    return res.status(500).json({ error: 'Failed to update event' });
   }
 });
 
-// DELETE /api/events/:id
 router.delete('/events/:id', authMiddleware, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const eventId = parseInt(req.params.id, 10);
+    await prisma.event.delete({ where: { id: eventId } });
 
-    await prisma.event.delete({
-      where: { id: eventId },
-    });
-
-    res.status(204).end(); // No content
+    return res.status(204).end();
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Failed to delete event' });
+    return res.status(500).json({ error: 'Failed to delete event' });
   }
 });
 
