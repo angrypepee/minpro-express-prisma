@@ -7,12 +7,12 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import Link from 'next/link';
 
-// Define form data
 interface FormData {
   name: string;
   email: string;
   password: string;
   role: 'ATTENDEE' | 'ORGANIZER';
+  referralCode?: string; // Optional referral code field
 }
 
 const schema = yup.object({
@@ -20,6 +20,7 @@ const schema = yup.object({
   email: yup.string().email('Invalid email format').required('Email is required'),
   password: yup.string().min(8, 'Password must be at least 8 characters').required('Password is required'),
   role: yup.string().oneOf(['ATTENDEE', 'ORGANIZER']).required('Role is required'),
+  referralCode: yup.string().optional(), // Referral code is optional
 }).required();
 
 export default function RegisterForm() {
@@ -29,12 +30,14 @@ export default function RegisterForm() {
   const [submitting, setSubmitting] = useState(false);
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
+  const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001/api';
+
 
   const onSubmit = async (data: FormData) => {
     setSubmitting(true);
     setApiError(null);
     try {
-      const response = await fetch('http://localhost:3001/api/register', { // Correct API endpoint URL
+      const response = await fetch(`${apiBaseUrl}/register`, { 
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -119,6 +122,19 @@ export default function RegisterForm() {
                 <option value="ORGANIZER">Organizer</option>
               </select>
               {errors.role && <p className="text-red-500 text-sm">{errors.role.message}</p>}
+            </div>
+
+            <div className="mb-4"> 
+              <label htmlFor="referralCode" className="block text-gray-700 font-bold mb-2">
+                Referral Code (Optional):
+              </label>
+              <input
+                type="text"
+                id="referralCode"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                {...register('referralCode')}
+              />
+              {errors.referralCode && <p className="text-red-500 text-sm">{errors.referralCode.message}</p>}
             </div>
 
             {apiError && <p className="text-red-500 text-sm mb-4">{apiError}</p>}

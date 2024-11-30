@@ -11,7 +11,7 @@ model User {
   id           Int        @id @default(autoincrement())
   email        String     @unique
   name         String
-  role         Role
+  role         Role       @default(ATTENDEE) // Default role is ATTENDEE
   createAt     DateTime   @default(now())
   balance      Float      @default(0)
   referralCode String?    @unique
@@ -35,7 +35,7 @@ model Event {
   limit       Int
   organizerId Int
   createAt    DateTime
-  image   String
+  image       String
   attendees   Attendee[]
   organizer   User       @relation("OrganizedEvents", fields: [organizerId], references: [id])
   reviews     Review[]

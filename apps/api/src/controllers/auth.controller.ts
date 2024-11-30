@@ -7,7 +7,7 @@ import * as jwt from 'jsonwebtoken';
 const prisma = new PrismaClient();
 
 export class AuthController {
-  public async register(req: Request, res: Response): Promise<void> {
+  public async register(req: Request, res: Response): Promise<Response | undefined> {
     try {
       const { name, email, password } = req.body;
 
@@ -42,7 +42,7 @@ export class AuthController {
     }
   }
 
-  public async login(req: Request, res: Response): Promise<void> {
+  public async login(req: Request, res: Response): Promise<Response | undefined> {
     try {
       const { email, password } = req.body;
 
@@ -72,7 +72,7 @@ export class AuthController {
     }
   }
 
-  public async getAuthenticatedUser(req: any, res: Response): Promise<void> { 
+  public async getAuthenticatedUser(req: any, res: Response): Promise<Response | undefined> { 
     try {
       const user = req.user; 
 
@@ -87,4 +87,5 @@ export class AuthController {
       res.status(500).json({ message: 'Something went wrong' });
     }
   }
+
 }

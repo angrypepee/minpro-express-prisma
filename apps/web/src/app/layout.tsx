@@ -1,6 +1,7 @@
+// app/layout.tsx
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import './globals.css'; // Import global CSS file
+import './globals.css';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 
@@ -18,7 +19,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}> {/* Apply Inter font */}
+      <head>
+        <link href="/dist/output.css" rel="stylesheet" /> {/* Link the generated CSS */}
+      </head>
+      <body className={inter.className}>
         <Header />
         {children}
         <Footer />

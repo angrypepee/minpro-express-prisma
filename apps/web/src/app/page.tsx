@@ -3,11 +3,41 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import EventList from '@/components/Event'; 
+import { Event } from '@prisma/client'; 
 
 export default function Home() {
+  const [events, setEvents] = useState<Event[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch('/api/events');
+        if (response.ok) {
+          const data = await response.json();
+          setEvents(data);
+        } else {
+          const errorData = await response.json();
+          setError(errorData.error || 'Failed to fetch events');
+        }
+      } catch (error) {
+        console.error('Error fetching events:', error);
+        setError('An unexpected error occurred');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
   return (
     <main className="bg-gradient-to-r from-blue-500 to-purple-500 min-h-screen">
       <div className="container mx-auto p-8 text-white">
+        {/* Hero Section */}
         <div className="text-center">
           <h1 className="text-5xl font-bold mb-4">Meriah Event</h1>
           <p className="text-lg mb-8">
@@ -15,45 +45,31 @@ export default function Home() {
           </p>
           <Link
             href="/register"
-            className="bg-white hover:bg-gray-100 text-blue-500 font-bold py-2 px-4 rounded"
+            className="bg-white hover:bg-gray-100 text-blue-500 font-bold py-2 px-4 rounded transition duration-300"
           >
             Get Started
           </Link>
         </div>
 
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          <div className="bg-white bg-opacity-20 rounded-lg shadow-md p-6 text-center">
-            <h2 className="text-xl font-bold mb-4">Create Events</h2>
-            <p className="text-gray-200">
-              Easily set up and manage events of any size.
-            </p>
-          </div>
-          <div className="bg-white bg-opacity-20 rounded-lg shadow-md p-6 text-center">
-            <h2 className="text-xl font-bold mb-4">Sell Tickets</h2>
-            <p className="text-gray-200">
-              Sell tickets online and track sales effortlessly.
-            </p>
-          </div>
-          <div className="bg-white bg-opacity-20 rounded-lg shadow-md p-6 text-center">
-            <h2 className="text-xl font-bold mb-4">
-              Manage Attendees
-            </h2>
-            <p className="text-gray-200">
-              Keep track of attendees and manage registrations seamlessly.
-            </p>
-          </div>
-          <div className="bg-white bg-opacity-20 rounded-lg shadow-md p-6 text-center">
-            <h2 className="text-xl font-bold mb-4">Gain Insights</h2>
-            <p className="text-gray-200">
-              Analyze event performance and make data-driven decisions.
-            </p>
+        {/* Upcoming Events Section */}
+        <div className="mt-16">
+          <h2 className="text-2xl font-bold mb-4">Upcoming Events</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"> 
+            {isLoading ? (
+              <p>Loading events...</p>
+            ) : error ? (
+              <p className="text-red-500 col-span-full">{error}</p> 
+            ) : (
+              <EventList events={events} /> 
+            )}
           </div>
         </div>
 
+        {/* Features Section */}
         <div className="mt-24 flex flex-col md:flex-row items-center">
           <div className="md:w-1/2">
             <Image
-              src="/event-image.jpg" // Replace with your image
+              src="/event-image.jpg" 
               alt="Event Image"
               width={500}
               height={300}
@@ -68,7 +84,20 @@ export default function Home() {
               Our platform provides all the tools you need to plan, promote,
               and execute successful events.
             </p>
+            
+            
           </div>
+        </div>
+
+        {/* Call to Action Section */}
+        <div className="mt-24 text-center">
+          <h2 className="text-3xl font-bold mb-4">Ready to get started?</h2>
+          <Link
+            href="/register"
+            className="bg-white hover:bg-gray-100 text-blue-500 font-bold py-3 px-6 rounded transition duration-300"
+          >
+            Sign Up Now
+          </Link>
         </div>
       </div>
     </main>

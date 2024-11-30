@@ -18,7 +18,9 @@ app.use(express.json());
 const schema = yup.object({
   name: yup.string().required('Name is required'),
   email: yup.string().email('Invalid email format').required('Email is required'),
-  password: yup.string().min(8, 'Password must be at least 8 characters').required('Password is required'),
+  password: yup.string().min(8,   
+ 'Password must be at least 8 characters').required('Password is required'),   
+
 }).required();
 
 // GET /api/test-db
@@ -47,7 +49,8 @@ app.post('/api/register', async (req, res) => {
 
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
-      return res.status(409).json({ error: 'Email already exists' });
+      return res.status(409).json({ error: 'Email already exists'   
+ });
     }
 
     const saltRounds = 10;
@@ -57,7 +60,8 @@ app.post('/api/register', async (req, res) => {
       data: {
         name,
         email,
-        password: hashedPassword,
+        password: hashedPassword,   
+
         role: role,
       },
     });
@@ -66,7 +70,8 @@ app.post('/api/register', async (req, res) => {
 
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Failed to create user' });
+    res.status(500).json({ error: 'Failed to create user'   
+ });
   }
 });
 
@@ -80,15 +85,18 @@ app.post('/api/login', async (req, res) => {
 
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
-      return res.status(401).json({ error: 'Invalid email or password' });
+      return res.status(401).json({   
+ error: 'Invalid email or password' });
     }
 
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
-      return res.status(401).json({ error: 'Invalid email or password' });
+      return res.status(401).json({   
+ error: 'Invalid email or password' });
     }
 
-    const token = jwt.sign({ userId: user.id }, jwtSecretKey);
+    const token = jwt.sign({ userId: user.id   
+ }, jwtSecretKey);
 
     res.setHeader('Set-Cookie', `token=${token}; HttpOnly; Secure; Path=/;`);
 
@@ -112,6 +120,36 @@ app.get('/api/user', authMiddleware, async (req, res) => {
   }
 });
 
+// POST /api/events (protected route)
+app.post('/api/events', authMiddleware, async (req, res) => {
+  try {
+    // 1. Get the authenticated user's ID
+    const organizerId = req.user.id;
+
+    // 2. Extract event data from the request body
+    const { name, date, location, description, limit, image } = req.body;
+
+    // 3. Create the event in the database
+    const event = await prisma.event.create({
+      data: {
+        name,
+        date: new Date(date), // Convert date string to Date object
+        location,
+        description,
+        limit,
+        image,
+        organizerId, // Associate the event with the organizer
+      },
+    });
+
+    res.status(201).json({ message: 'Event created successfully', event });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to create event' });
+  }
+});
+
+
 // GET /api/events (protected route)
 app.get('/api/events', authMiddleware, async (req, res) => { 
   try {
@@ -128,52 +166,6 @@ app.get('/api/events', authMiddleware, async (req, res) => {
   }
 });
 
-// GET /api/tickets
-app.get('/api/tickets', async (req, res) => {
-  try {
-    const tickets = await prisma.ticket.findMany({
-      include: { 
-        event: true,
-      },
-    });
-    res.json(tickets);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Failed to fetch tickets' });
-  }
-});
-
-// GET /api/attendees
-app.get('/api/attendees', async (req, res) => {
-  try {
-    const attendees = await prisma.attendee.findMany({
-      include: {  
-        user: true,
-        event: true,
-      },
-    });
-    res.json(attendees);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Failed to fetch attendees' });
-  }
-});
-
-// GET /api/reviews
-app.get('/api/reviews', async (req, res) => {
-  try {
-    const reviews = await prisma.review.findMany({
-      include: { 
-        user: true,
-        event: true,
-      },
-    });
-    res.json(reviews);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Failed to fetch reviews' });
-  }
-});
 
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
