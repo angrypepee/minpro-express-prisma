@@ -1,19 +1,17 @@
-// middleware/authmiddleware.ts
+// authMiddleware.ts
 import { Request, Response, NextFunction } from 'express';
 import * as jwt from 'jsonwebtoken';
 import { PrismaClient } from '@prisma/client';
 
+import { AuthenticatedRequest } from '../src/types';
+
+
 const prisma = new PrismaClient();
 
-interface AuthenticatedRequest extends Request {
-  user?: { id: number; role: string };
-}
-
-// Get the JWT secret key from environment variables
-const jwtSecretKey = process.env.JWT_SECRET_KEY || 'j1J1VEgOQjl1NtmZftCA8YOxQOHjKRXM6MoNPvPb29s=';
-
+const jwtSecretKey = process.env.JWT_SECRET_KEY || 'your-default-secret'; 
+// Middleware
 export const authMiddleware = async (
-  req: AuthenticatedRequest,
+  req: Request, 
   res: Response,
   next: NextFunction
 ) => {
@@ -21,15 +19,11 @@ export const authMiddleware = async (
     const token = req.headers.authorization?.split(' ')[1];
 
     if (!token) {
-      return res
-        .status(401)
-        .json({ message: 'Authorization header missing' });
+      return res.status(401).json({ message: 'Authorization header missing' });
     }
 
-    // Use the jwtSecretKey to verify the token
-    const decodedToken = jwt.verify(token, jwtSecretKey) as {
-      userId: number;
-    };
+    const jwtSecretKey = process.env.JWT_SECRET_KEY || 'your-default-secret';
+    const decodedToken = jwt.verify(token, jwtSecretKey) as { userId: number };
 
     const user = await prisma.user.findUnique({
       where: { id: decodedToken.userId },
@@ -40,7 +34,8 @@ export const authMiddleware = async (
       return res.status(401).json({ message: 'Invalid token' });
     }
 
-    req.user = user;
+    // Explicitly cast req as AuthenticatedRequest here
+    (req as AuthenticatedRequest).user = user;
     next();
   } catch (error) {
     console.error(error);

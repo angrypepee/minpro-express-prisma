@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import EventList from '@/components/Event'; 
 import { Event } from '@prisma/client'; 
+import './globals.css';
 
 export default function Home() {
   const [events, setEvents] = useState<Event[]>([]);

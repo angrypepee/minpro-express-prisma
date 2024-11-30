@@ -11,8 +11,13 @@ const app = express();
 const prisma = new PrismaClient();
 const port = 3001;
 
+app.get('/', (req, res) => {
+  res.send('Hello from the API!'); // Or redirect to another page
+});
+
 app.use(cors());
 app.use(express.json());
+
 
 // Yup schema for validation
 const schema = yup.object({
