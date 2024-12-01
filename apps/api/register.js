@@ -6,10 +6,10 @@ const prisma = new PrismaClient();
 
 // Yup schema for validation
 const schema = yup.object({
-  name: yup.string().required('Name is required'),
-  email: yup.string().email('Invalid email format').required('Email is required'),
+  name: yup.string().trim().required('Name is required'),
+  email: yup.string().email('Invalid email format').required('Email is required').trim(),
   password: yup.string().min(8, 'Password must be at least 8 characters').required('Password is required'),
-  role: yup.string().oneOf(['ATTENDEE', 'ORGANIZER']).required('Role is required'), // Add role validation
+  role: yup.string().oneOf(['ATTENDEE', 'ORGANIZER']).required('Role is required'),
 }).required();
 
 export default async function handler(req, res) {

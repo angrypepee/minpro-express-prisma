@@ -1,5 +1,3 @@
-// src/index.ts
-
 import express from 'express';
 import { AuthController } from './controllers/auth.controller';
 import { PrismaClient } from '@prisma/client';
@@ -22,7 +20,7 @@ const main = async () => {
     app.get('/me', authController.getAuthenticatedUser); 
 
     app.listen(port, () => {
-      console.log(`Server listening on port ${port}`);
+      console.log(`Server running on http://localhost:${port}`);
     });
 
   } catch (error) {

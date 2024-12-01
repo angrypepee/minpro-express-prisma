@@ -175,7 +175,3 @@ app.get('/api/reviews', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch reviews' });
   }
 });
-
-app.listen(port, () => {
-  console.log(`Server is listening on port ${port}`);
-});
