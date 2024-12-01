@@ -5,8 +5,8 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient(); 
 
-interface AuthenticatedRequest extends Request {
-  user?: { id: number; role: string }; // Changed id to number
+export interface AuthenticatedRequest extends Request {
+  user?: { id: number; role: string }; 
 }
 
 export const authMiddleware = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {

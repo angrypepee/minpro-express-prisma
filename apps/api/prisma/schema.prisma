@@ -34,7 +34,7 @@ model Event {
   description String
   limit       Int
   organizerId Int
-  createAt    DateTime
+  createdAt    DateTime
   image   String
   attendees   Attendee[]
   organizer   User       @relation("OrganizedEvents", fields: [organizerId], references: [id])
