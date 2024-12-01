@@ -1,21 +1,22 @@
 {
   "compilerOptions": {
-    "module": "CommonJS",               // Change module system to CommonJS
-    "target": "ESNext",                 // You can keep ESNext for modern JS output
-    "moduleResolution": "node",         // Node.js style module resolution
-    "sourceMap": true,                  // Enable source maps for debugging
-    "strict": true,                     // Enable strict type checking
-    "esModuleInterop": true,            // Ensures interoperability between ESM and CommonJS
-    "skipLibCheck": true,               // Skip type checking of declaration files
-    "forceConsistentCasingInFileNames": true,  // Enforces consistent casing
-    "outDir": "./dist",                 // Output directory for compiled files
-    "baseUrl": ".",                     // Base directory for resolving non-relative paths
+    "module": "ESNext",               
+    "target": "ESNext",                 
+    "moduleResolution": "node",  
+    "esModuleInterop": true,   
+    "skipLibCheck": true,       
+    "sourceMap": true,   
+    "jsx": "react", 
+    "strict": true,                     
+    "forceConsistentCasingInFileNames": true,  
+    "outDir": "./dist",                 
+    "baseUrl": ".",                    
     "paths": {
-      "@/*": ["./src/*"]                // Path alias for cleaner imports
+      "@/*": ["./src/*"]                
     },
-    "typeRoots": ["node_modules/@types", "src/types"], // Custom type definitions
-    "allowSyntheticDefaultImports": true // Allow default imports from CommonJS modules
+    "typeRoots": ["node_modules/@types", "src/types"], 
+    "allowSyntheticDefaultImports": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"],  // Include .ts and .tsx files in the src directory
-  "exclude": ["node_modules"]                    // Exclude node_modules directory from the compilation
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/index.ts"],  
+  "exclude": ["node_modules"]                  
 }
