@@ -6,8 +6,7 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 const app = express();
-const port = process.env.PORT || 3001; 
-app.listen(port, () => console.log(`Server running on port ${port}`));
+const port = process.env.PORT || 3000; 
 
 const main = async () => {
   try {
@@ -33,6 +32,6 @@ const main = async () => {
   }
 };
 
-main(); 
+main().catch((error) => console.error('Unhandled error:', error));
 
 export default app;

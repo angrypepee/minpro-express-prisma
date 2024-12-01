@@ -53,7 +53,7 @@ export default function Home() {
         <div className="mt-24 flex flex-col md:flex-row items-center">
           <div className="md:w-1/2">
             <Image
-              src="/event-image.jpg" // Replace with your image
+              src="/banner/promosi" 
               alt="Event Image"
               width={500}
               height={300}
