@@ -1,10 +1,38 @@
-import App from './app';
+// src/index.ts
 
-const main = () => {
-  // init db here
+import express from 'express';
+import { AuthController } from './controllers/auth.controller';
+import { PrismaClient } from '@prisma/client';
 
-  const app = new App();
-  app.start();
+const prisma = new PrismaClient();
+const app = express();
+const port = process.env.PORT || 3001; 
+app.listen(port, () => console.log(`Server running on port ${port}`));
+
+const main = async () => {
+  try {
+    await prisma.$connect();
+    console.log('Database connected successfully!');
+
+    const authController = new AuthController(prisma);
+
+    app.use(express.json());
+
+    app.post('/register', authController.register);
+    app.post('/login', authController.login);
+    app.get('/me', authController.getAuthenticatedUser); 
+
+    app.listen(port, () => {
+      console.log(`Server listening on port ${port}`);
+    });
+
+  } catch (error) {
+    console.error('Error connecting to database:', error);
+  } finally {
+    await prisma.$disconnect(); 
+  }
 };
 
-main();
+main(); 
+
+export default app;

@@ -28,7 +28,7 @@ export const authMiddleware = async (req: AuthenticatedRequest, res: Response, n
       return res.status(401).json({ message: 'Invalid token' });
     }
 
-    req.user = user; // No need to convert id to string
+    (req as AuthenticatedRequest).user = user; 
     next();
   } catch (error) {
     console.error(error);

@@ -1,11 +1,12 @@
-const express = require('express');
-const { PrismaClient } = require('@prisma/client');
-const cors = require('cors');
-const bcrypt = require('bcrypt');
-const yup = require('yup');
-const jwt = require('jsonwebtoken');
+// server.js
+import express from 'express';
+import { PrismaClient } from '@prisma/client';
+import cors from 'cors';
+import bcrypt from 'bcrypt';
+import yup from 'yup';
+import jwt from 'jsonwebtoken';
+import { authMiddleware } from './middleware/authmiddleware.ts';
 
-import { authMiddleware } from './middleware/authmiddleware';
 
 const app = express();
 const prisma = new PrismaClient();
@@ -71,7 +72,7 @@ app.post('/api/register', async (req, res) => {
 });
 
 // Secret key for JWT (get it from the environment variable)
-const jwtSecretKey = process.env.JWT_SECRET_KEY || 'j1J1VEgOQjl1NtmZftCA8YOxQOHjKRXM6MoNPvPb29s='; 
+const jwtSecretKey = process.env.JWT_SECRET_KEY; 
 
 // POST /api/login
 app.post('/api/login', async (req, res) => {

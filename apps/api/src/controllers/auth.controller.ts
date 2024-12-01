@@ -1,90 +1,97 @@
 // auth.controller.ts
-import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
+import { Request, Response } from 'express';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
+import * as dotenv from 'dotenv';
+import { resolve } from 'path';
 
-const prisma = new PrismaClient();
+const NODE_ENV = process.env.NODE_ENV || 'development';
+const envFile = NODE_ENV === 'development' ? '.env.development' : '.env';
+dotenv.config({ path: resolve(__dirname, `../${envFile}`) });
+dotenv.config({ path: resolve(__dirname, `../${envFile}.local`), override: true });
+
+const JWT_SECRET = process.env.JWT_SECRET_KEY as string;
 
 export class AuthController {
-  public async register(req: Request, res: Response): Promise<void> {
-    try {
-      const { name, email, password } = req.body;
+  private prisma: PrismaClient;
 
+  constructor(prisma: PrismaClient) {
+    this.prisma = prisma;
+  }
+
+  public async register(req: Request, res: Response): Promise<Response> {
+    try {
+      const { name, email, password, role } = req.body;
       if (!name || !email || !password) {
-        res.status(400).json({ message: 'Please provide name, email, and password' });
-        return;
+        return res.status(400).json({ message: 'Please provide name, email, and password' });
       }
 
-      const existingUser = await prisma.user.findUnique({
+      const existingUser = await this.prisma.user.findUnique({
         where: { email },
       });
       if (existingUser) {
-        res.status(409).json({ message: 'User already exists' });
-        return;
+        return res.status(409).json({ message: 'User already exists' });
       }
 
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      const user = await prisma.user.create({
+      const user = await this.prisma.user.create({
         data: {
           name,
           email,
           password: hashedPassword,
-          role: 'ATTENDEE', 
+          role: role || 'ATTENDEE',
         },
       });
 
-      res.status(201).json({ message: 'User created successfully', user });
+      return res.status(201).json({ message: 'User created successfully', user });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: 'Something went wrong' });
+      return res.status(500).json({ message: 'Something went wrong' });
     }
   }
 
-  public async login(req: Request, res: Response): Promise<void> {
+  public async login(req: Request, res: Response): Promise<Response> {
     try {
       const { email, password } = req.body;
 
       if (!email || !password) {
-        res.status(400).json({ message: 'Please provide email and password' });
-        return;
+        return res.status(400).json({ message: 'Please provide email and password' });
       }
 
-      const user = await prisma.user.findUnique({ where: { email } });
+      const user = await this.prisma.user.findUnique({ where: { email } });
       if (!user) {
-        res.status(401).json({ message: 'Invalid credentials' });
-        return;
+        return res.status(401).json({ message: 'Invalid credentials' });
       }
 
       const isPasswordValid = await bcrypt.compare(password, user.password);
       if (!isPasswordValid) {
-        res.status(401).json({ message: 'Invalid credentials' });
-        return;
+        return res.status(401).json({ message: 'Invalid credentials' });
       }
 
-      const token = jwt.sign({ userId: user.id }, 'j1J1VEgOQjl1NtmZftCA8YOxQOHjKRXM6MoNPvPb29s='); 
+      const token = jwt.sign({ userId: user.id }, JWT_SECRET, { algorithm: 'HS256' });
 
-      res.status(200).json({ message: 'Login successful', token }); 
+      res.setHeader('Set-Cookie', `token=${token}; HttpOnly; Secure; Path=/;`);
+      return res.status(200).json({ message: 'Login successful' });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: 'Something went wrong' });
+      return res.status(500).json({ message: 'Something went wrong' });
     }
   }
 
-  public async getAuthenticatedUser(req: any, res: Response): Promise<void> { 
+  public async getAuthenticatedUser(req: any, res: Response): Promise<Response> {
     try {
-      const user = req.user; 
+      const user = req.user;
 
       if (!user) {
-        res.status(401).json({ message: 'Unauthorized' });
-        return;
+        return res.status(401).json({ message: 'Unauthorized' });
       }
 
-      res.status(200).json({ user }); 
+      return res.status(200).json({ user });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: 'Something went wrong' });
+      return res.status(500).json({ message: 'Something went wrong' });
     }
   }
 }

@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "ES2015",
-    "module": "commonjs",
+    "module": "ESNext",
+    "target": "ESNext",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -11,10 +11,10 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "typeRoots": ["node_modules/@types", "src/types"]
+    "typeRoots": ["node_modules/@types", "src/types"],
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true
   },
-  // "include": ["src/**/*"],
-  "include": ["**/*.ts"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules"]
-  
 }
