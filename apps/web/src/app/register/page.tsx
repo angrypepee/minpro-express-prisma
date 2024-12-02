@@ -33,7 +33,7 @@ export default function RegisterForm() {
     setSubmitting(true);
     setApiError(null);
     try {
-      const response = await fetch('http://localhost:3001/api/register', { // Correct API endpoint URL
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
