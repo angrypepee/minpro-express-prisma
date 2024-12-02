@@ -1,3 +1,5 @@
+// web/pages/api/register.js
+
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import * as yup from 'yup';
@@ -21,24 +23,27 @@ function generateReferralCode(length = 7) {
     .toUpperCase();
 }
 
+// API handler for registration
 export default async function handler(req, res) {
   if (req.method === 'POST') {
     try {
       // 1. Parse the request body as JSON
-      const parsedBody = JSON.parse(req.body);
+      const parsedBody = req.body;
 
-      // 2. Validate the data
+      // 2. Validate the request data using Yup
       try {
         await schema.validate(parsedBody);
       } catch (validationError) {
         return res.status(400).json({ error: validationError.errors });
       }
 
-      // 3. Extract data from the parsed body
+      // 3. Extract the fields from the request body
       const { name, email, password, role, referralCode } = parsedBody;
 
-      // 4. Check if the email is already registered
-      const existingUser = await prisma.user.findUnique({ where: { email } });
+      // 4. Check if the email is already registered in the database
+      const existingUser = await prisma.user.findUnique({
+        where: { email }
+      });
       if (existingUser) {
         return res.status(409).json({ error: 'Email already exists' });
       }
@@ -47,64 +52,42 @@ export default async function handler(req, res) {
       const saltRounds = 10;
       const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-      // Generate a unique referral code for the new user
+      // 6. Generate a unique referral code for the new user
       let generatedReferralCode;
       do {
         generatedReferralCode = generateReferralCode();
       } while (await prisma.user.findUnique({ where: { referralCode: generatedReferralCode } }));
 
-      // 6. Create the user in the database
+      // 7. If the user has referred someone, find the user with the referral code
+      let referredById = null;
+      if (referralCode) {
+        const referrer = await prisma.user.findUnique({ where: { referralCode } });
+        if (referrer) {
+          referredById = referrer.id;
+        }
+      }
+
+      // 8. Create the new user in the database
       const user = await prisma.user.create({
         data: {
           name,
           email,
           password: hashedPassword,
-          role: role,
+          role,
           referralCode: generatedReferralCode,
-          referredBy: referralCode ? await prisma.user.findUnique({ 
-            where: { referralCode },
-            select: { id: true }
-          }).then(user => user?.id) : null,
+          referredBy: referredById,
         },
       });
 
+      // 9. Return a success response
       res.status(201).json({ message: 'User created successfully', user });
 
     } catch (error) {
-      console.error(error);
+      console.error('Error during user registration:', error);
       res.status(500).json({ error: 'Failed to create user' });
     }
-
-  } else if (req.method === 'PUT') {
-    try {
-      const { userId, referralCode } = req.body;
-
-      const user = await prisma.user.findUnique({ where: { id: userId } });
-      if (!user) {
-        return res.status(404).json({ error: 'User not found' });
-      }
-
-      const referrer = await prisma.user.findUnique({ where: { referralCode } });
-      if (!referrer || referrer.id === user.id) {
-        return res.status(400).json({ error: 'Invalid referral code' });
-      }
-
-      if (user.referredBy) {
-        return res.status(400).json({ error: 'You have already redeemed a referral code' });
-      }
-
-      await prisma.user.update({
-        where: { id: userId },
-        data: { referredBy: referrer.id }
-      });
-
-      res.status(200).json({ message: 'Referral code redeemed successfully' });
-
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Failed to redeem referral code' });
-    }
   } else {
-    res.status(405).end();
+    // Method Not Allowed for non-POST requests
+    res.status(405).json({ error: 'Method not allowed' });
   }
 }
