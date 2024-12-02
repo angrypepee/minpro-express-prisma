@@ -1,62 +1,60 @@
-// components/Header.tsx
 'use client';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
 
 export function Header() {
-  const [logoUrl, setLogoUrl] = useState('/logo1.png');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userName, setUserName] = useState('');
-
-  useEffect(() => {
-    const getRandomNumber = () => Math.floor(Math.random() * 3) + 1;
-    setLogoUrl(`/logo${getRandomNumber()}.png`);
-
-    const token = localStorage.getItem('token');
-    if (token) {
-      setIsLoggedIn(true);
-
-      fetch('/api/user', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then(res => res.json())
-        .then(data => setUserName(data.name))
-        .catch(error => console.error('Error fetching user data:', error));
-    }
-  }, []);
+  const logoUrl = '/logo/starbucks.png'; 
+  const isLoggedIn = false; 
+  const userName = 'John Doe'; 
 
   return (
-    <header className="bg-blue-500 p-4">
-      <div className="container mx-auto flex items-center justify-between">
+    <header style={{ backgroundColor: '#3b82f6', padding: '1rem 20px ' }}>
+      <div
+        style={{
+          maxWidth: '1200px',
+          margin: '0 auto',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap', 
+        }}
+      >
         <Link href="/">
           <Image
-            src="/logo/starbucks.png"
+            src={logoUrl} 
             alt="Meriah Event Logo"
             width={40}
             height={10}
           />
         </Link>
-        <nav>
-          <ul className="flex space-x-4">
+
+        <nav style={{ flex: '1', display: 'flex', justifyContent: 'flex-end' }}>
+          <ul
+            style={{
+              display: 'flex',
+              listStyleType: 'none',
+              padding: 0,
+              margin: 0,
+              flexWrap: 'wrap',  // Wrap navigation items on smaller screens
+              justifyContent: 'center',  // Center the navigation items on mobile
+            }}
+          >
             {!isLoggedIn && (
               <>
-                <li>
-                  <Link href="/register" className="text-white hover:text-gray-200">
+                <li style={{ marginRight: '1rem', marginBottom: '0.5rem' }}>
+                  <Link href="/register" style={{ color: 'white', textDecoration: 'none' }}>
                     Register
                   </Link>
                 </li>
-                <li>
-                  <Link href="/login" className="text-white hover:text-gray-200">
+                <li style={{ marginBottom: '0.5rem' }}>
+                  <Link href="/login" style={{ color: 'white', textDecoration: 'none' }}>
                     Login
                   </Link>
                 </li>
               </>
             )}
             {isLoggedIn && (
-              <li className="text-white">
+              <li style={{ color: 'white', marginBottom: '0.5rem' }}>
                 Welcome, {userName}!
               </li>
             )}

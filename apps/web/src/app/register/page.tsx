@@ -1,4 +1,3 @@
-// apps/web/src/app/register/page.tsx
 'use client';
 
 import { useState } from 'react';
@@ -57,77 +56,123 @@ export default function RegisterForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded shadow-md w-96">
-        <h2 className="text-2xl font-bold mb-4">Register</h2>
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(to bottom, #3b82f6, #9333ea)'
+    }}>
+      <div style={{ backgroundColor: 'white', padding: '32px', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', width: '384px' }}>
+        <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px' }}>Register</h2>
         {registrationSuccess ? (
-          <div className="text-green-500 text-sm mb-4">
+          <div style={{ color: '#10b981', fontSize: '14px', marginBottom: '16px' }}>
             Registration successful! You can now{' '}
-            <Link href="/login" className="text-blue-500 hover:underline">
+            <Link href="/login" style={{ color: '#3b82f6', textDecoration: 'underline' }}>
               log in
             </Link>
             .
           </div>
         ) : (
           <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="mb-4">
-              <label htmlFor="name" className="block text-gray-700 font-bold mb-2">
+            <div style={{ marginBottom: '16px' }}>
+              <label htmlFor="name" style={{ display: 'block', color: '#4b5563', fontWeight: 'bold', marginBottom: '8px' }}>
                 Name:
               </label>
               <input
                 type="text"
                 id="name"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                style={{
+                  width: '100%', 
+                  padding: '12px 16px', 
+                  borderRadius: '8px', 
+                  border: '1px solid #d1d5db', 
+                  fontSize: '16px', 
+                  color: '#4b5563', 
+                  marginBottom: '8px',
+                  boxSizing: 'border-box'
+                }}
                 {...register('name')}
               />
-              {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
+              {errors.name && <p style={{ color: '#ef4444', fontSize: '14px' }}>{errors.name.message}</p>}
             </div>
-            <div className="mb-4">
-              <label htmlFor="email" className="block text-gray-700 font-bold mb-2">
+            <div style={{ marginBottom: '16px' }}>
+              <label htmlFor="email" style={{ display: 'block', color: '#4b5563', fontWeight: 'bold', marginBottom: '8px' }}>
                 Email:
               </label>
               <input
                 type="email"
                 id="email"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                style={{
+                  width: '100%', 
+                  padding: '12px 16px', 
+                  borderRadius: '8px', 
+                  border: '1px solid #d1d5db', 
+                  fontSize: '16px', 
+                  color: '#4b5563', 
+                  marginBottom: '8px',
+                  boxSizing: 'border-box'
+                }}
                 {...register('email')}
               />
-              {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
+              {errors.email && <p style={{ color: '#ef4444', fontSize: '14px' }}>{errors.email.message}</p>}
             </div>
-            <div className="mb-4">
-              <label htmlFor="password" className="block text-gray-700 font-bold mb-2">
+            <div style={{ marginBottom: '16px' }}>
+              <label htmlFor="password" style={{ display: 'block', color: '#4b5563', fontWeight: 'bold', marginBottom: '8px' }}>
                 Password:
               </label>
               <input
                 type="password"
                 id="password"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                style={{
+                  width: '100%', 
+                  padding: '12px 16px', 
+                  borderRadius: '8px', 
+                  border: '1px solid #d1d5db', 
+                  fontSize: '16px', 
+                  color: '#4b5563', 
+                  marginBottom: '8px',
+                  boxSizing: 'border-box'
+                }}
                 {...register('password')}
               />
-              {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
+              {errors.password && <p style={{ color: '#ef4444', fontSize: '14px' }}>{errors.password.message}</p>}
             </div>
-            <div className="mb-4">
-              <label htmlFor="role" className="block text-gray-700 font-bold mb-2">
+            <div style={{ marginBottom: '16px' }}>
+              <label htmlFor="role" style={{ display: 'block', color: '#4b5563', fontWeight: 'bold', marginBottom: '8px' }}>
                 Role:
               </label>
               <select
                 id="role"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                style={{
+                  width: '100%', 
+                  padding: '12px 16px', 
+                  borderRadius: '8px', 
+                  border: '1px solid #d1d5db', 
+                  fontSize: '16px', 
+                  color: '#4b5563', 
+                  marginBottom: '8px',
+                  boxSizing: 'border-box'
+                }}
                 {...register('role')}
               >
                 <option value="ATTENDEE">Attendee</option>
                 <option value="ORGANIZER">Organizer</option>
               </select>
-              {errors.role && <p className="text-red-500 text-sm">{errors.role.message}</p>}
+              {errors.role && <p style={{ color: '#ef4444', fontSize: '14px' }}>{errors.role.message}</p>}
             </div>
 
-            {apiError && <p className="text-red-500 text-sm mb-4">{apiError}</p>}
+            {apiError && <p style={{ color: '#ef4444', fontSize: '14px', marginBottom: '16px' }}>{apiError}</p>}
 
-            <div className="flex items-center justify-between">
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <button
                 type="submit"
                 disabled={submitting}
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                style={{
+                  backgroundColor: '#3b82f6', 
+                  padding: '12px 24px', 
+                  borderRadius: '8px', 
+                  color: 'white', 
+                  fontWeight: 'bold', 
+                  border: 'none', 
+                  cursor: 'pointer', 
+                  width: '48%'
+                }}
               >
                 {submitting ? 'Registering...' : 'Register'}
               </button>
