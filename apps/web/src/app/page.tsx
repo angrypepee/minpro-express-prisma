@@ -37,7 +37,7 @@ export default function Home() {
 
   return (
     <main className="bg-gradient-to-r from-blue-500 to-purple-500 min-h-screen">
-      <div className="container mx-auto p-8 text-black"> {/* Text color changed to black for better readability on white background */}
+      <div className="container mx-auto p-8 text-black"> 
         {/* Hero Section */}
         <div className="hero-section">
           <h1>Meriah Event</h1>

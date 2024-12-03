@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import './ProfilePage.css'; // Import the CSS file
 
 interface User {
   id: number;
@@ -44,6 +45,24 @@ export default function ProfilePage() {
     fetchProfile();
   }, [router]);
 
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('/api/logout', {
+        method: 'POST',
+      });
+
+      if (response.ok) {
+        router.push('/login'); // Redirect to login page after logout
+      } else {
+        const errorData = await response.json();
+        alert(errorData.error || 'Failed to log out');
+      }
+    } catch (error) {
+      console.error('Logout failed:', error);
+      alert('An error occurred during logout');
+    }
+  };
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
@@ -71,6 +90,10 @@ export default function ProfilePage() {
           </ul>
         </div>
       )}
+
+      <button className="logout-button" onClick={handleLogout}>
+        Logout
+      </button>
     </div>
   );
 }

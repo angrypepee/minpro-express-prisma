@@ -6,15 +6,20 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "./dist",
+    "outDir": "./dist",  // Output folder for compiled files
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     },
     "typeRoots": ["node_modules/@types", "src/types"]
   },
-  // "include": ["src/**/*"],
-  "include": ["**/*.ts"],
-  "exclude": ["node_modules"]
-  
+  "include": [
+    "src/**/*",
+    "apps/api/**/*",  
+    "apps/api/create-event.js",
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"  // Exclude output folders like 'dist'
+  ]
 }
