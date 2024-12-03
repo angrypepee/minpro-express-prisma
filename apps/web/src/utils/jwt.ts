@@ -13,10 +13,11 @@ export function signToken(payload: { userId: string }) {
   return jwt.sign(payload, secretKey, { expiresIn: '1h' });  // Set expiry time as 1 hour
 }
 
-export function verifyToken(token: string): DecodedToken {
+export function verifyToken(token: string) {
   try {
-    return jwt.verify(token, secretKey) as DecodedToken;  // Return the decoded token with the userId and expiration
+    const decoded = jwt.verify(token, secretKey);  // Verify the token
+    return decoded;  // Return the decoded payload if valid
   } catch (error) {
-    throw new Error('Invalid or expired token');
+    throw new Error('Invalid or expired token');  // Throw error if the token is invalid or expired
   }
 }

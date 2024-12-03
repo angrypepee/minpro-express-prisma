@@ -12,7 +12,7 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'All fields are required' });
       }
 
-      const token = req.cookies.token;
+      const token = req.cookies.token|| req.headers.authorization?.split(' ')[1];
       if (!token) {
         return res.status(401).json({ error: 'Unauthorized' });
       }
