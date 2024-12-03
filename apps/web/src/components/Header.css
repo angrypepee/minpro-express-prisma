@@ -1,0 +1,58 @@
+/* Header.css */
+.header {
+  background-color: #ffffff; /* Set the background to white */
+  padding: 1rem; 
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px; 
+  margin: 0 auto;
+}
+
+.logo {
+  display: flex;
+  align-items: center; 
+  gap: 0.5rem; /* Space between the logo and text */
+}
+
+.logo-link {
+  display: flex;
+  align-items: center; 
+  text-decoration: none; /* Remove underline from the link */
+}
+
+.logo h1 {
+  margin: 0px 10px;
+  font-size: 1.5rem;
+  font-weight: bold; 
+  color: black; /* Set text color */
+}
+
+.nav {
+  display: flex;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1rem; /* Tailwind space-x-4 */
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-link {
+  color: black; /* Set text color to black */
+  text-decoration: none;
+  font-weight: normal; /* Tailwind font-bold */
+  padding: 0.5rem 1rem; /* Tailwind py-2 px-4 */
+  border-radius: 0.375rem; /* Tailwind rounded */
+  transition: color 0.3s, background-color 0.3s; /* Smooth transitions */
+}
+
+.nav-link:hover {
+  color: #cbd5e0; /* Tailwind hover:text-gray-200 */
+  background-color: rgba(255, 255, 255, 0.1); /* Optional hover effect */
+}

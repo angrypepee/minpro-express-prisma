@@ -6,6 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import '../styles/globals.css';
 
 interface LoginForm {
   email: string;

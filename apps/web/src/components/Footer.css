@@ -1,0 +1,22 @@
+.footer {
+    background-color: #1e40af; /* Blue background */
+    padding: 1rem; /* Padding around the footer */
+  }
+  
+  .footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1120px;
+    margin: 0 auto; /* Center the container */
+  }
+  
+  .logo {
+    /* Styling for the logo */
+  }
+  
+  .copyright {
+    color: white; /* White text */
+    font-size: 0.875rem; /* Small text size */
+  }
+  

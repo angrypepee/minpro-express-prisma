@@ -1,0 +1,77 @@
+/* Container styling */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0rem;
+    color: #1a202c; /* Adjust text color for readability */
+  }
+  
+  /* Hero Section */
+  .hero-section {
+    text-align: center;
+  }
+  
+  .hero-section h1 {
+    font-size: 3rem; /* Tailwind `text-5xl` */
+    font-weight: bold; /* Tailwind `font-bold` */
+    margin-bottom: 1rem; /* Tailwind `mb-4` */
+  }
+  
+  .hero-section p {
+    font-size: 1.125rem; /* Tailwind `text-lg` */
+    margin-bottom: 2rem; /* Tailwind `mb-8` */
+  }
+  
+  /* Upcoming Events Section */
+  .upcoming-events {
+    margin-top: 4rem; /* Tailwind `mt-16` */
+  }
+  
+  .upcoming-events h2 {
+    font-size: 1.5rem; /* Tailwind `text-2xl` */
+    font-weight: bold; /* Tailwind `font-bold` */
+    margin-bottom: 1rem; /* Tailwind `mb-4` */
+  }
+  
+  /* Features Section */
+  .features-section {
+    margin-top: 6rem; /* Tailwind `mt-24` */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .features-section .features-text {
+    width: 50%;
+    margin-top: 2rem; /* Tailwind `mt-8` */
+    text-align: center;
+  }
+  
+  .features-section h2 {
+    font-size: 1.875rem; /* Tailwind `text-3xl` */
+    font-weight: bold; /* Tailwind `font-bold` */
+    margin-bottom: 1rem; /* Tailwind `mb-4` */
+  }
+  
+  .features-section p {
+    color: #4a5568; /* Dark gray for better contrast */
+  }
+  
+  /* Call to Action Section */
+  .cta-section {
+    margin-top: 6rem; /* Tailwind `mt-24` */
+    text-align: center;
+  }
+  
+  .cta-section h2 {
+    font-size: 1.875rem; /* Tailwind `text-3xl` */
+    font-weight: bold; /* Tailwind `font-bold` */
+    margin-bottom: 1rem; /* Tailwind `mb-4` */
+  }
+  
+  /* Main element */
+  main {
+    background-color: #ffffff; /* White background */
+    color: #1a202c; /* Dark text color for readability */
+  }
+  
