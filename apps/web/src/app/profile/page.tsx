@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation'; // Import useRouter for navigation
+import { useRouter } from 'next/navigation';
 
 interface LoginForm {
   email: string;
@@ -22,7 +22,7 @@ export default function LoginPage() {
     resolver: yupResolver(schema),
   });
   const [loginError, setLoginError] = useState<string | null>(null);
-  const router = useRouter(); // Initialize the router
+  const router = useRouter();
 
   const onSubmit = async (data: LoginForm) => {
     try {
@@ -34,12 +34,9 @@ export default function LoginPage() {
 
       if (response.ok) {
         const responseData = await response.json();
-        // Check if the response contains a redirect URL
         if (responseData.redirectUrl) {
-          // Redirect the user to the profile page or provided URL
           router.push(responseData.redirectUrl);
         } else {
-          // Redirect to the default homepage if no redirect URL is provided
           window.location.href = '/profile';
         }
       } else {
