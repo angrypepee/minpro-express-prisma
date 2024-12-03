@@ -1,4 +1,3 @@
-// pages/api/login.js
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -24,13 +23,14 @@ export default async function handler(req, res) {
       }
 
       // 3. Generate a JWT (JSON Web Token)
-      const token = jwt.sign({ userId: user.id }, jwtSecret, { expiresIn: '1h'}); 
+      const token = jwt.sign({ userId: user.id }, jwtSecret, { expiresIn: '1h' });
 
-      // 4. Set the JWT as a cookie (optional, but recommended for security)
-      res.setHeader('Set-Cookie', `token=${token}; HttpOnly; Secure; Path=/;`);
+      // 4. Set the JWT as a cookie
+      const isProduction = process.env.NODE_ENV === 'production';
+      res.setHeader('Set-Cookie', `token=${token}; HttpOnly; Path=/; Max-Age=3600; ${isProduction ? 'Secure;' : ''} SameSite=Strict;`);
 
-      // 5. Send a response with a redirect URL
-      res.status(200).json({ message: 'Login successful', redirectUrl: '/' });
+      // 5. Send a response with a redirect URL to the client
+      res.status(200).json({ message: 'Login successful', redirectUrl: '/profile' });
 
     } catch (error) {
       console.error(error);

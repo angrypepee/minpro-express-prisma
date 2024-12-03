@@ -56,3 +56,38 @@
   color: #cbd5e0; /* Tailwind hover:text-gray-200 */
   background-color: rgba(255, 255, 255, 0.1); /* Optional hover effect */
 }
+
+/* Profile Dropdown */
+.profile-dropdown {
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  list-style: none;
+  padding: 8px;
+  margin: 0;
+  top: 100%;
+  left: 0;
+  z-index: 10;
+}
+
+.profile-dropdown li {
+  padding: 8px 12px;
+}
+
+.profile-dropdown li:hover {
+  background: #f0f0f0;
+}
+
+.logout-button {
+  background: none;
+  border: none;
+  color: #0070f3;
+  cursor: pointer;
+  padding: 0;
+  font-size: 1em;
+}
+
+.logout-button:hover {
+  text-decoration: underline;
+}

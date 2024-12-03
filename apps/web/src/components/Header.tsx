@@ -1,4 +1,3 @@
-// Header.tsx
 'use client';
 
 import Link from 'next/link';
@@ -10,23 +9,39 @@ export function Header() {
   const [logoUrl, setLogoUrl] = useState('/logo/minpro.png');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState('');
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
 
   useEffect(() => {
+    // Simulate fetching logo randomly
     const getRandomNumber = () => Math.floor(Math.random() * 3) + 1;
     setLogoUrl(`/logo${getRandomNumber()}.png`);
 
+    // Check if token exists in localStorage
     const token = localStorage.getItem('token');
     if (token) {
       setIsLoggedIn(true);
-      fetch('/api/user', {
+      fetch('/api/profile', {
+        credentials: 'include', // Include cookies
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
         .then(res => res.json())
-        .then(data => setUserName(data.name));
+        .then(data => {
+          if (data.name) setUserName(data.name);
+        })
+        .catch(() => {
+          setIsLoggedIn(false); // If error, log out
+        });
     }
   }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setIsLoggedIn(false);
+    setUserName('');
+    setShowProfileMenu(false);
+  };
 
   return (
     <header className="header">
@@ -64,8 +79,29 @@ export function Header() {
                 </li>
               </>
             ) : (
-              <li className="nav-link">
+              <li
+                className="nav-link profile-menu"
+                onMouseEnter={() => setShowProfileMenu(true)}
+                onMouseLeave={() => setShowProfileMenu(false)}
+              >
                 Welcome, {userName}!
+                {showProfileMenu && (
+                  <ul className="profile-dropdown">
+                    <li>
+                      <Link href="/profile" className="profile-link">
+                        Profile
+                      </Link>
+                    </li>
+                    <li>
+                      <button
+                        className="logout-button"
+                        onClick={handleLogout}
+                      >
+                        Logout
+                      </button>
+                    </li>
+                  </ul>
+                )}
               </li>
             )}
           </ul>

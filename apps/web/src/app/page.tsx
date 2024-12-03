@@ -50,9 +50,10 @@ export default function Home() {
           </Link>
         </div>
 
+        {/* Call other Component */}
         <TestComponent />
 
-        {/* Upcoming Events Section */}
+        {/* Upcoming Event-bolction */}
         <div className="upcoming-events">
           <h2>Upcoming Events</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

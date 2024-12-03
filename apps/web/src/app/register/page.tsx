@@ -1,4 +1,3 @@
-// apps/web/src/app/register/page.tsx
 'use client';
 
 import { useState } from 'react';
@@ -6,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import Link from 'next/link';
+import './RegisterPage.css'; // Import the new CSS file
 
 interface FormData {
   name: string;
@@ -32,12 +32,11 @@ export default function RegisterForm() {
   const [apiError, setApiError] = useState<string | null>(null);
   const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000/api';
 
-
   const onSubmit = async (data: FormData) => {
     setSubmitting(true);
     setApiError(null);
     try {
-      const response = await fetch(`${apiBaseUrl}/register`, { 
+      const response = await fetch(`${apiBaseUrl}/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -60,98 +59,88 @@ export default function RegisterForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded shadow-md w-96">
-        <h2 className="text-2xl font-bold mb-4">Register</h2>
+    <div className="register-container">
+      <div className="register-box">
+
+        <h2 className="register-title">Registration </h2>
         {registrationSuccess ? (
-          <div className="text-green-500 text-sm mb-4">
-            Registration successful! You can now{' '}
-            <Link href="/login" className="text-blue-500 hover:underline">
+          <div className="success-message">
+            Registration successful ❤️! You can now{' '}
+            <Link href="/login" className="success-link">
               log in
             </Link>
             .
           </div>
         ) : (
           <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="mb-4">
-              <label htmlFor="name" className="block text-gray-700 font-bold mb-2">
-                Name:
-              </label>
+            <div className="form-group">
+              <label htmlFor="name" className="form-label">Name:</label>
               <input
                 type="text"
                 id="name"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="form-input"
                 {...register('name')}
               />
-              {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
+              {errors.name && <p className="error-text">{errors.name.message}</p>}
             </div>
-            <div className="mb-4">
-              <label htmlFor="email" className="block text-gray-700 font-bold mb-2">
-                Email:
-              </label>
+            <div className="form-group">
+              <label htmlFor="email" className="form-label">Email:</label>
               <input
                 type="email"
                 id="email"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="form-input"
                 {...register('email')}
               />
-              {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
+              {errors.email && <p className="error-text">{errors.email.message}</p>}
             </div>
-            <div className="mb-4">
-              <label htmlFor="password" className="block text-gray-700 font-bold mb-2">
-                Password:
-              </label>
+            <div className="form-group">
+              <label htmlFor="password" className="form-label">Password:</label>
               <input
                 type="password"
                 id="password"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="form-input"
                 {...register('password')}
               />
-              {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
+              {errors.password && <p className="error-text">{errors.password.message}</p>}
             </div>
-            <div className="mb-4">
-              <label htmlFor="role" className="block text-gray-700 font-bold mb-2">
-                Role:
-              </label>
+            <div className="form-group">
+              <label htmlFor="role" className="form-label">Role:</label>
               <select
                 id="role"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="form-input"
                 {...register('role')}
               >
                 <option value="ATTENDEE">Attendee</option>
                 <option value="ORGANIZER">Organizer</option>
               </select>
-              {errors.role && <p className="text-red-500 text-sm">{errors.role.message}</p>}
+              {errors.role && <p className="error-text">{errors.role.message}</p>}
             </div>
 
-            <div className="mb-4"> 
-              <label htmlFor="referralCode" className="block text-gray-700 font-bold mb-2">
+            <div className="form-group">
+              <label htmlFor="referralCode" className="form-label">
                 Referral Code (Optional):
               </label>
               <input
                 type="text"
                 id="referralCode"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="form-input"
                 {...register('referralCode')}
               />
-              {errors.referralCode && <p className="text-red-500 text-sm">{errors.referralCode.message}</p>}
+              {errors.referralCode && <p className="error-text">{errors.referralCode.message}</p>}
             </div>
 
-            {apiError && <p className="text-red-500 text-sm mb-4">{apiError}</p>}
+            {apiError && <p className="error-text">{apiError}</p>}
 
-            <div className="flex items-center justify-between">
-              <button
-                type="submit"
-                disabled={submitting}
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              >
-                {submitting ? 'Registering...' : 'Register'}
-              </button>
-            </div>
+            <button
+              type="submit"
+              disabled={submitting}
+              className="submit-button"
+            >
+              {submitting ? 'Registering...' : 'Register'}
+            </button>
           </form>
         )}
       </div>
     </div>
   );
 }
-console.log();

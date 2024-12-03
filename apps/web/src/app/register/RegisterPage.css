@@ -1,0 +1,90 @@
+.register-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f3f4f6; /* Light gray background */
+    padding: 1rem;
+  }
+  
+  .register-box {
+    background-color: #ffffff; /* White background */
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  .register-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  .form-label {
+    display: block;
+    font-weight: 500;
+    color: #4b5563; /* Dark gray */
+    margin-bottom: 0.5rem;
+  }
+  
+  .form-input {
+    width: 100%;
+    border: 1px solid #d1d5db; /* Gray border */
+    border-radius: 8px;
+    padding: 0.5rem;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  
+  .form-input:focus {
+    border-color: #3b82f6; /* Blue border on focus */
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+  }
+  
+  .error-text {
+    color: #ef4444; /* Red for error text */
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+  }
+  
+  .success-message {
+    color: #10b981; /* Green for success text */
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  
+  .success-link {
+    color: #3b82f6; /* Blue text */
+    font-weight: 500;
+    text-decoration: none;
+  }
+  
+  .success-link:hover {
+    text-decoration: underline;
+  }
+  
+  .submit-button {
+    width: 100%;
+    background-color: #2563eb; /* Blue background */
+    color: #ffffff; /* White text */
+    font-weight: 600;
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .submit-button:hover {
+    background-color: #1d4ed8; /* Darker blue on hover */
+  }
+  
