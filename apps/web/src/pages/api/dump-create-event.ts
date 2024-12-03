@@ -56,6 +56,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           limit,
           date: eventDate, // Ensure the date is a valid Date object
           location,
+          image: "image-url-or-path",
           organizerId: Number(userId), // Set the user who is organizing the event
           createAt: new Date(), // Set creation date to now
           tickets: {
