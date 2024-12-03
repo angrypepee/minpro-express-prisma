@@ -1,0 +1,23 @@
+/* styles/EventDetailPage.css */
+.event-detail-container {
+    padding: 20px;
+  }
+  
+  .event-detail-container h1 {
+    font-size: 2em;
+  }
+  
+  .event-detail-container ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .event-detail-container li {
+    margin: 5px 0;
+  }
+  
+  .error {
+    color: red;
+    font-weight: bold;
+  }
+  

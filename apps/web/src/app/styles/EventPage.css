@@ -1,0 +1,21 @@
+/* styles/EventsPage.css */
+.events-container {
+    padding: 20px;
+  }
+  
+  .event-item {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+  }
+  
+  .event-item:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .error {
+    color: red;
+    font-weight: bold;
+  }
+  

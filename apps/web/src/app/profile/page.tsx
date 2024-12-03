@@ -11,10 +11,22 @@ interface User {
   role: 'USER' | 'ORGANIZER'; // Add other roles if needed
 }
 
+interface Event {
+  id: number;
+  name: string;
+  description: string;
+  date: string; // Adjust this type based on how you store the date
+  location: string;
+  limit: number;
+  tickets: { type: string; price: number }[];
+}
+
 export default function ProfilePage() {
   const [user, setUser] = useState<User | null>(null);
+  const [events, setEvents] = useState<Event[]>([]); // State to hold events
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [eventFetchError, setEventFetchError] = useState<string | null>(null); // State for event fetch error
   const router = useRouter();
 
   useEffect(() => {
@@ -28,6 +40,11 @@ export default function ProfilePage() {
         if (response.ok) {
           const userData = await response.json();
           setUser(userData);
+
+          // If user is an organizer, fetch events related to them
+          if (userData.role === 'ORGANIZER') {
+            await fetchEvents(userData.id); // Fetch events based on organizer ID
+          }
         } else {
           const errorData = await response.json();
           setError(errorData.error || 'Failed to fetch profile');
@@ -44,6 +61,25 @@ export default function ProfilePage() {
 
     fetchProfile();
   }, [router]);
+
+  // Fetch events for the organizer
+  const fetchEvents = async (userId: number) => {
+    try {
+      const response = await fetch(`/api/events?organizerId=${userId}`);
+      if (response.ok) {
+        const eventsData = await response.json();
+        setEvents(eventsData); // Set events based on organizer
+        if (eventsData.length === 0) {
+          setEventFetchError('No events found.');
+        }
+      } else {
+        setEventFetchError('Failed to fetch events.');
+      }
+    } catch (error) {
+      console.error('Error fetching events:', error);
+      setEventFetchError('An error occurred while fetching events.');
+    }
+  };
 
   const handleLogout = async () => {
     try {
@@ -82,12 +118,35 @@ export default function ProfilePage() {
       {user?.role === 'ORGANIZER' && (
         <div>
           <h2>Organizer Dashboard</h2>
-          <p>Welcome, organizer! Here are your tools:</p>
-          <ul>
-            <li>Event Management</li>
-            <li>Attendee Insights</li>
-            <li>Revenue Reports</li>
-          </ul>
+          <p>Welcome, organizer! Here are your events:</p>
+
+          {eventFetchError ? (
+            <p className="event-error">{eventFetchError}</p> // Show event fetch error
+          ) : (
+            <ul>
+              {events.length > 0 ? (
+                events.map((event) => (
+                  <li key={event.id}>
+                    <h3>{event.name}</h3>
+                    <p>{event.description}</p>
+                    <p>Location: {event.location}</p>
+                    <p>Date: {new Date(event.date).toLocaleString()}</p>
+                    <p>Limit: {event.limit}</p>
+                    <h4>Tickets:</h4>
+                    <ul>
+                      {event.tickets.map((ticket, index) => (
+                        <li key={index}>
+                          {ticket.type} - ${ticket.price}
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                ))
+              ) : (
+                <p>No events available.</p>
+              )}
+            </ul>
+          )}
         </div>
       )}
 

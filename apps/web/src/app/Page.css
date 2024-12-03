@@ -1,77 +1,115 @@
-/* Container styling */
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0rem;
-    color: #1a202c; /* Adjust text color for readability */
-  }
-  
-  /* Hero Section */
-  .hero-section {
-    text-align: center;
-  }
-  
-  .hero-section h1 {
-    font-size: 3rem; /* Tailwind `text-5xl` */
-    font-weight: bold; /* Tailwind `font-bold` */
-    margin-bottom: 1rem; /* Tailwind `mb-4` */
-  }
-  
-  .hero-section p {
-    font-size: 1.125rem; /* Tailwind `text-lg` */
-    margin-bottom: 2rem; /* Tailwind `mb-8` */
-  }
-  
-  /* Upcoming Events Section */
-  .upcoming-events {
-    margin-top: 4rem; /* Tailwind `mt-16` */
-  }
-  
-  .upcoming-events h2 {
-    font-size: 1.5rem; /* Tailwind `text-2xl` */
-    font-weight: bold; /* Tailwind `font-bold` */
-    margin-bottom: 1rem; /* Tailwind `mb-4` */
-  }
-  
-  /* Features Section */
-  .features-section {
-    margin-top: 6rem; /* Tailwind `mt-24` */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .features-section .features-text {
-    width: 50%;
-    margin-top: 2rem; /* Tailwind `mt-8` */
-    text-align: center;
-  }
-  
-  .features-section h2 {
-    font-size: 1.875rem; /* Tailwind `text-3xl` */
-    font-weight: bold; /* Tailwind `font-bold` */
-    margin-bottom: 1rem; /* Tailwind `mb-4` */
-  }
-  
-  .features-section p {
-    color: #4a5568; /* Dark gray for better contrast */
-  }
-  
-  /* Call to Action Section */
-  .cta-section {
-    margin-top: 6rem; /* Tailwind `mt-24` */
-    text-align: center;
-  }
-  
-  .cta-section h2 {
-    font-size: 1.875rem; /* Tailwind `text-3xl` */
-    font-weight: bold; /* Tailwind `font-bold` */
-    margin-bottom: 1rem; /* Tailwind `mb-4` */
-  }
-  
-  /* Main element */
-  main {
-    background-color: #ffffff; /* White background */
-    color: #1a202c; /* Dark text color for readability */
-  }
-  
+/* page.css */
+
+.main-container {
+  background: #ffffff;
+  min-height: 100vh;
+  font-family: sans-serif;
+}
+
+/* Banner Section */
+.banner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 0 0 2rem 0;
+}
+
+.banner-image-container {
+  max-width: 1200px;
+  width: 100%;
+}
+
+.banner-image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Event Listing Section */
+.event-listing {
+  padding: 2rem 0;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.event-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.event-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333; /* Dark color for better contrast */
+  margin: 0;
+}
+
+.event-menu {
+  display: flex;
+  align-items: center;
+}
+
+.search-bar, .category-dropdown {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  background-color: #f1f1f1; /* Lighter background for search bar and dropdown */
+  color: #333; /* Dark text for readability */
+  width: 200px; /* Same width for both */
+}
+
+.category-dropdown {
+  margin-left: 1rem; /* Space between search bar and dropdown */
+}
+
+.event-cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.event-card {
+  background-color: #ffffff; /* White background for event cards */
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+}
+
+.event-image {
+  border-radius: 8px;
+  object-fit: cover;
+  width: 100%;
+  height: auto;
+}
+
+.event-name {
+  margin-top: 1rem;
+  color: #333; /* Dark text color for event name */
+  font-size: 1.2rem;
+}
+
+.event-location, .event-time {
+  color: #666; /* Lighter gray for location and time */
+  font-size: 1rem;
+}
+
+.view-details-button {
+  display: block;
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #9333ea; /* Vibrant purple */
+  color: white;
+  text-align: center;
+  border-radius: 4px;
+  text-decoration: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.view-details-button:hover {
+  background-color: #7a2db8; /* Slightly darker purple on hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
