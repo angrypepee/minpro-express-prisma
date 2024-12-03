@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
 
 interface EventData {
   name: string;
@@ -11,11 +11,11 @@ interface EventData {
   price: string;
 }
 
-export default function CreateEventPage() {
+const CreateEventPage = () => {
   const [eventData, setEventData] = useState<EventData>({
     name: '',
     description: '',
-    limit: 70,
+    limit: 50,
     date: '',
     location: '',
     ticketType: 'GENERAL',
@@ -26,10 +26,7 @@ export default function CreateEventPage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setEventData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setEventData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async () => {
@@ -39,25 +36,17 @@ export default function CreateEventPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          name: eventData.name,
-          description: eventData.description,
-          limit: eventData.limit,
-          date: eventData.date, // Ensure this is in the correct format
-          location: eventData.location,
-          ticketType: eventData.ticketType,
-          price: parseFloat(eventData.price),
-        }),
+        body: JSON.stringify(eventData),
       });
 
       if (response.ok) {
-        router.push('/profile'); // Redirect after event creation
+        router.push('/events'); // Redirect to event list page
       } else {
         const errorData = await response.json();
         setError(errorData.error || 'Failed to create event');
       }
     } catch (err) {
-      console.error('Error creating event:', err);
+      console.error(err);
       setError('An unexpected error occurred');
     }
   };
@@ -81,6 +70,13 @@ export default function CreateEventPage() {
           onChange={handleChange}
         />
         <input
+          type="number"
+          name="limit"
+          placeholder="Attendee Limit"
+          value={eventData.limit}
+          onChange={handleChange}
+        />
+        <input
           type="datetime-local"
           name="date"
           value={eventData.date}
@@ -89,7 +85,7 @@ export default function CreateEventPage() {
         <input
           type="text"
           name="location"
-          placeholder="Event Location"
+          placeholder="Location"
           value={eventData.location}
           onChange={handleChange}
         />
@@ -99,7 +95,7 @@ export default function CreateEventPage() {
           <option value="EARLY_BIRD">Early Bird</option>
         </select>
         <input
-          type="number"
+          type="text"
           name="price"
           placeholder="Ticket Price"
           value={eventData.price}
@@ -109,8 +105,9 @@ export default function CreateEventPage() {
           Create Event
         </button>
       </form>
-
       {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>
   );
-}
+};
+
+export default CreateEventPage;

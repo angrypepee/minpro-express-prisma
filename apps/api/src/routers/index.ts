@@ -9,7 +9,7 @@ const prisma = new PrismaClient();
 const router = Router();
 
 // Get the JWT secret key from environment variables
-const jwtSecretKey = process.env.JWT_SECRET_KEY || 'j1J1VEgOQjl1NtmZftCA8YOxQOHjKRXM6MoNPvPb29s=';
+const jwtSecretKey = process.env.JWT_SECRET_KEY || 'FTz5pxy61cdaWyejfKPdNZAYItLGoErRaHPqrBoGfWw=';
 
 interface AuthenticatedRequest extends Request {
   user?: { id: number; role: string; password?: string };

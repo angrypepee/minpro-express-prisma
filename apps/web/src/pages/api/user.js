@@ -14,7 +14,7 @@ export default async function handler(req, res) {
       }
 
       // Verify the token
-      const decoded = jwt.verify(token, 'j1J1VEgOQjl1NtmZftCA8YOxQOHjKRXM6MoNPvPb29s= '); // Your secret key
+      const decoded = jwt.verify(token, 'FTz5pxy61cdaWyejfKPdNZAYItLGoErRaHPqrBoGfWw= '); // Your secret key
 
       // Log decoded token for debugging
       console.log('Decoded token:', decoded);

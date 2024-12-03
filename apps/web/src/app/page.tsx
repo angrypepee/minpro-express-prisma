@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import EventList from '@/components/Event';
+import EventList from '@/components/EventList';
 import { Event } from '@prisma/client';
 import TestComponent from '../components/TestComponents';
 import './Page.css'; // Import the new CSS file
@@ -51,7 +51,7 @@ export default function Home() {
         </div>
 
         {/* Call other Component */}
-        <TestComponent />
+        <EventList events={events} />
 
         {/* Upcoming Event-bolction */}
         <div className="upcoming-events">

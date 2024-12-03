@@ -1,18 +1,18 @@
-// src/utils/jwt.js
-import jwt from 'jsonwebtoken';
+// utils/jwt.js
+const jwt = require('jsonwebtoken');
 
-const jwtSecret = process.env.JWT_SECRET || 'defaultSecret';
+const secretKey = process.env.JWT_SECRET_KEY || 'FTz5pxy61cdaWyejfKPdNZAYItLGoErRaHPqrBoGfWw='; // Use a secret key from your environment
 
-/**
- * Helper function to verify JWT token and decode the payload.
- * @param {string} token - The JWT token to verify.
- * @returns {object} - The decoded JWT payload.
- * @throws Will throw an error if the token is invalid.
- */
-export const verifyToken = (token) => {
+function signToken(payload) {
+  return jwt.sign(payload, secretKey, { expiresIn: '400h' });  // Set expiry time as 1 hour
+}
+
+function verifyToken(token) {
   try {
-    return jwt.verify(token, jwtSecret);
+    return jwt.verify(token, secretKey);  // Return the decoded token
   } catch (error) {
     throw new Error('Invalid or expired token');
   }
-};
+}
+
+module.exports = { signToken, verifyToken };

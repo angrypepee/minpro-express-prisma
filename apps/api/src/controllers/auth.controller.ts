@@ -63,7 +63,7 @@ export class AuthController {
         return;
       }
 
-      const token = jwt.sign({ userId: user.id }, 'j1J1VEgOQjl1NtmZftCA8YOxQOHjKRXM6MoNPvPb29s='); 
+      const token = jwt.sign({ userId: user.id }, 'FTz5pxy61cdaWyejfKPdNZAYItLGoErRaHPqrBoGfWw='); 
 
       res.status(200).json({ message: 'Login successful', token }); 
     } catch (error) {

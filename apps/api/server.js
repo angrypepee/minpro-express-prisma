@@ -76,7 +76,7 @@ app.post('/api/register', async (req, res) => {
 });
 
 // Secret key for JWT (get it from the environment variable)
-const jwtSecretKey = process.env.JWT_SECRET_KEY || 'j1J1VEgOQjl1NtmZftCA8YOxQOHjKRXM6MoNPvPb29s='; 
+const jwtSecretKey = process.env.JWT_SECRET_KEY || 'FTz5pxy61cdaWyejfKPdNZAYItLGoErRaHPqrBoGfWw='; 
 
 // POST /api/login
 app.post('/api/login', async (req, res) => {

@@ -10,7 +10,7 @@ interface AuthenticatedRequest extends Request {
 }
 
 // Get the JWT secret key from environment variables
-const jwtSecretKey = process.env.JWT_SECRET_KEY || 'j1J1VEgOQjl1NtmZftCA8YOxQOHjKRXM6MoNPvPb29s=';
+const jwtSecretKey = process.env.JWT_SECRET_KEY || 'FTz5pxy61cdaWyejfKPdNZAYItLGoErRaHPqrBoGfWw=';
 
 export const authMiddleware = async (
   req: AuthenticatedRequest,
